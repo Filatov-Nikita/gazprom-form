@@ -28,7 +28,7 @@
         <select required id="service1" name="service1" v-model="serviceModel">
           <option value="" key="default">Выберите услугу</option>
           <option
-            v-for="item in serviceOpts"
+            v-for="item in service1Opts"
             :key="item.value"
             :value="item.value"
           >
@@ -36,7 +36,18 @@
           </option>
         </select>
       </template>
-      <!-- <select name="service2"></select> -->
+      <template v-if="showServices2">
+        <select required id="service2" name="service2" v-model="service2Model">
+          <option value="" key="default">Выберите услугу</option>
+          <option
+            v-for="item in service2Opts"
+            :key="item.value"
+            :value="item.value"
+          >
+            {{ item.label }}
+          </option>
+        </select>
+      </template>
 
       <template v-if="showTimes">
         <label for="time">Выберите время</label>
@@ -75,22 +86,26 @@
         v-model="emailModel"
       />
       <button type="submit">Записаться</button>
+      <AppModal v-model="dialog">
+        <p>
+          Вы записаны на прием Ваша запись в УЦПУ по адресу
+          {{ curEcpu[ecpuModel]?.label }} {{ curDate[dateModel]?.label }} в
+          время {{ timeModel }} подтверждена Обратите внимание, что вам может
+          позвонить оператор для уточнения деталей. Чтобы получить талон на
+          прием необходимо ввести код подтверждения в терминале электронной
+          очереди. Код подтверждения: {{ finish.code }} Запись на прием:
+          {{ curDate[dateModel]?.label }} {{ timeModel }}
+        </p>
+        <button @click="dialog = false">Закрыть</button>
+      </AppModal>
     </form>
   </div>
 </template>
 
 <script>
 import { mask } from 'vue-the-mask';
-
-const weekDays = [
-  'Понедельник',
-  'Вторник',
-  'Среда',
-  'Четверг',
-  'Пятница',
-  'Суббота',
-  'Воскресенье',
-];
+import { getPrettyDate, getDayOfYear, getTimes, isHoliday } from '@/helpers';
+import AppModal from './AppModal.vue';
 
 export default {
   directives: { mask },
@@ -104,20 +119,26 @@ export default {
       services: null,
       dates: null,
       bookingTimes: null,
-      times: this.getTimes(),
+      times: getTimes(),
       ecpuModel: '',
       serviceModel: '',
+      service2Model: '',
       dateModel: '',
       timeModel: '',
       nameModel: '',
       cellphoneModel: '',
       emailModel: '',
+      dialog: false,
+      finish: {
+        code: null,
+        body: null,
+      },
     };
   },
   watch: {
     ecpuModel(ecpuId) {
       if (ecpuId) {
-        Promise.all([this.getServices(ecpuId), this.getDates(ecpuId)]);
+        Promise.all([, /* this.getServices(ecpuId) */ this.getDates(ecpuId)]);
       }
 
       this.dateModel = '';
@@ -130,10 +151,18 @@ export default {
 
       this.timeModel = '';
     },
+    serviceModel() {
+      this.service2Model = '';
+    },
     showServices(val) {
       if (!val) {
         this.services = null;
         this.serviceModel = '';
+      }
+    },
+    showServices2(val) {
+      if (!val) {
+        this.service2Model = '';
       }
     },
     showDates(val) {
@@ -150,6 +179,18 @@ export default {
     },
   },
   computed: {
+    curEcpu() {
+      return this.ecpuOpts.reduce((acc, item) => {
+        acc[item.value] = item;
+        return acc;
+      }, {});
+    },
+    curDate() {
+      return this.dateOpts.reduce((acc, item) => {
+        acc[item.value] = item;
+        return acc;
+      }, {});
+    },
     ecpuOpts() {
       if (!this.ecpu) return [];
       return this.ecpu.map((item) => ({
@@ -157,19 +198,30 @@ export default {
         value: item.id,
       }));
     },
-    serviceOpts() {
-      if (!this.services) return [];
-      return this.services.map((item) => ({
-        label: item,
-        value: item,
-      }));
+    service1Opts() {
+      return [
+        { label: 'Газификация', value: 'gaz' },
+        { label: 'Газоснабжение', value: 'gazsnab' },
+        { label: 'Прочее', value: 'other' },
+      ];
+    },
+    service2Opts() {
+      if (!this.serviceModel) return [];
+      const items = getService2();
+      return items[this.serviceModel];
+    },
+    servicePivot() {
+      return getServicePivot();
     },
     dateOpts() {
       if (!this.dates) return [];
-      return this.getDateRange(this.dates);
+      return this.getDateRange();
     },
     showServices() {
       return this.ecpuModel;
+    },
+    showServices2() {
+      return this.showServices && this.serviceModel;
     },
     showDates() {
       return this.ecpuModel;
@@ -177,40 +229,39 @@ export default {
     showTimes() {
       return this.showDates && this.dateModel && this.bookingTimes;
     },
+    daysInclude() {
+      if (!this.dates) return [];
+      return this.dates
+        .filter((date) => date.type === '56')
+        .map((date) => date.date);
+    },
+    daysExclude() {
+      if (!this.dates) return [];
+      return this.dates
+        .filter((date) => date.type === '57')
+        .map((date) => date.date);
+    },
   },
   methods: {
-    getDateRange(filter = []) {
+    getDateRange() {
       let current = new Date();
       const dates = [];
 
       for (let i = 0; i < 30; i++) {
-        const pretty = this.getPrettyDate(current);
-        const weekDay = current.getDay();
+        let skip = false;
+        const weekday = current.getDay();
+        const pretty = getPrettyDate(current);
+
+        if (this.daysExclude.includes(pretty.value)) skip = true;
+        if (isHoliday(weekday) && !this.daysInclude.includes(pretty.value))
+          skip = true;
+
+        if (!skip) dates.push(pretty);
+
         current.setDate(current.getDate() + 1);
-
-        const isAdding = filter.find((fItem) => fItem.type === '56' && fItem.date === pretty.value) !== undefined;
-        const isRemoving = filter.find((fItem) => fItem.type === '57' && fItem.date === pretty.value) !== undefined;
-
-        if(weekDay === 0 || weekDay === 6) {
-          if(!isAdding) continue;
-        }
-
-        if(isRemoving) continue;
-
-        dates.push(pretty);
       }
 
       return dates;
-    },
-    formatDateVal(val) {
-      return val < 10 ? `0${val}` : val;
-    },
-    getPrettyDate(date) {
-      const dateStr = `${this.formatDateVal(
-        date.getDate()
-      )}.${this.formatDateVal(date.getMonth() + 1)}.${date.getFullYear()}`;
-
-      return { label: `${weekDays[date.getDay() === 0 ? 6 : date.getDay() - 1]} ${dateStr}`, value: dateStr };
     },
     async getEcpu() {
       const url = new URL('ecpu_list.php', this.base);
@@ -239,36 +290,37 @@ export default {
       const result = await fetch(url);
       const data = await result.json();
       this.bookingTimes = data.map((item) => item.time_booked);
-      // this.bookingTimes = ['08:30'];
-    },
-    getTimes() {
-      return [
-        '08:30',
-        '09:00',
-        '09:30',
-        '10:00',
-        '10:30',
-        '11:00',
-        '11:30',
-        '12:00',
-        '12:30',
-        '14:00',
-        '14:30',
-        '15:00',
-        '15:30',
-        '16:00',
-        '16:30',
-        '17:00',
-      ];
     },
     isBooking(time) {
       if (!this.bookingTimes) return true;
       return this.bookingTimes.includes(time);
     },
+    getCode() {
+      const ecpu = this.ecpu.find((item) => item.id === this.ecpuModel);
+
+      if (!ecpu) return '';
+
+      const ecpuNumber = ecpu.kod.substring(2);
+      const dayOfYear = getDayOfYear(this.dateModel);
+
+      let timeIndex = this.times.findIndex((t) => t === this.timeModel);
+      if (timeIndex === -1) return '';
+      timeIndex =
+        timeIndex > 99
+          ? timeIndex
+          : timeIndex < 10
+          ? `00${timeIndex}`
+          : `0${timeIndex}`;
+
+      return ecpuNumber + dayOfYear + timeIndex;
+    },
     onSubmit() {
+      this.dialog = true;
+
+      const serviceKey = this.serviceModel + '-' + this.service2Model;
       const body = {
         ecpu: this.ecpuModel,
-        service: this.serviceModel,
+        service: this.servicePivot[serviceKey],
         date: this.dateModel,
         time: this.timeModel,
         name: this.nameModel,
@@ -276,8 +328,90 @@ export default {
         cellphone: this.cellphoneModel,
       };
 
+      this.finish.code = this.getCode();
+      this.finish.body = body;
+
       console.log(body);
     },
   },
+  components: {
+    AppModal,
+  },
 };
+
+function getService2() {
+  return {
+    gaz: [
+      {
+        label: 'Физические лица',
+        value: 1,
+      },
+      {
+        label: 'Юридические лица',
+        value: 2,
+      },
+      {
+        label: 'Газификация под ключ',
+        value: 3,
+      },
+      {
+        label: 'Выдача готовых документов (ГРО)',
+        value: 4,
+      },
+    ],
+    gazsnab: [
+      {
+        label: 'Заключение договора на поставку газа',
+        value: 5,
+      },
+      {
+        label: 'Заключение договора на техническое обслуживание',
+        value: 6,
+      },
+      {
+        label: 'Расчеты на газ',
+        value: 7,
+      },
+      {
+        label: 'Опломбировка приборов учета газа',
+        value: 8,
+      },
+      {
+        label: 'Выдача готовых документов (РГК)',
+        value: 9,
+      },
+    ],
+    other: [
+      {
+        label: 'Установка, замена приборов учета газа',
+        value: 10,
+      },
+      {
+        label: 'Прочие работы и услуги',
+        value: 11,
+      },
+      {
+        label: 'Касса',
+        value: 12,
+      },
+    ],
+  };
+}
+
+function getServicePivot() {
+  return {
+    'gaz-1': 44,
+    'gaz-2': 45,
+    'gaz-3': 46,
+    'gaz-4': 47,
+    'gazsnab-5': 48,
+    'gazsnab-6': 49,
+    'gazsnab-7': 50,
+    'gazsnab-8': 51,
+    'gazsnab-9': 52,
+    'other-10': 53,
+    'other-11': 54,
+    'other-12': 55,
+  };
+}
 </script>
