@@ -238,8 +238,8 @@ export default {
       url.searchParams.append('date', date);
       const result = await fetch(url);
       const data = await result.json();
-      // this.bookingTimes = data.map((item) => item.time_booked);
-      this.bookingTimes = ['08:30'];
+      this.bookingTimes = data.map((item) => item.time_booked);
+      // this.bookingTimes = ['08:30'];
     },
     getTimes() {
       return [
