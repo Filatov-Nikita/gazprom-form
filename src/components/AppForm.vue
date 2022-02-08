@@ -82,6 +82,16 @@
 <script>
 import { mask } from 'vue-the-mask';
 
+const weekDays = [
+  'Понедельник',
+  'Вторник',
+  'Среда',
+  'Четверг',
+  'Пятница',
+  'Суббота',
+  'Воскресенье',
+];
+
 export default {
   directives: { mask },
   created() {
@@ -156,10 +166,7 @@ export default {
     },
     dateOpts() {
       if (!this.dates) return [];
-      return this.dates.map((item) => ({
-        label: item.date,
-        value: item.date,
-      }));
+      return this.getDateRange(this.dates);
     },
     showServices() {
       return this.ecpuModel;
@@ -172,6 +179,39 @@ export default {
     },
   },
   methods: {
+    getDateRange(filter = []) {
+      let current = new Date();
+      const dates = [];
+
+      for (let i = 0; i < 30; i++) {
+        const pretty = this.getPrettyDate(current);
+        const weekDay = current.getDay();
+        current.setDate(current.getDate() + 1);
+
+        const isAdding = filter.find((fItem) => fItem.type === '56' && fItem.date === pretty.value) !== undefined;
+        const isRemoving = filter.find((fItem) => fItem.type === '57' && fItem.date === pretty.value) !== undefined;
+
+        if(weekDay === 0 || weekDay === 6) {
+          if(!isAdding) continue;
+        }
+
+        if(isRemoving) continue;
+
+        dates.push(pretty);
+      }
+
+      return dates;
+    },
+    formatDateVal(val) {
+      return val < 10 ? `0${val}` : val;
+    },
+    getPrettyDate(date) {
+      const dateStr = `${this.formatDateVal(
+        date.getDate()
+      )}.${this.formatDateVal(date.getMonth() + 1)}.${date.getFullYear()}`;
+
+      return { label: `${weekDays[date.getDay() === 0 ? 6 : date.getDay() - 1]} ${dateStr}`, value: dateStr };
+    },
     async getEcpu() {
       const url = new URL('ecpu_list.php', this.base);
       const result = await fetch(url);
