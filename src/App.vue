@@ -3,10 +3,10 @@
 </template>
 
 <script>
-import AppForm from '@/components/AppForm.vue';
+import AppForm from "@/components/AppForm.vue";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
     AppForm,
   },
@@ -23,7 +23,6 @@ export default {
 
 label,
 select,
-button,
 input {
   display: block;
   width: 100%;
