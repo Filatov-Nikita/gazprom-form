@@ -197,7 +197,7 @@ export default {
   },
   data() {
     return {
-      base: "http://mrg.danat.su/services/priem/api/",
+      base: "/services/priem/api/",
       ecpu: null,
       services: null,
       dates: null,
@@ -366,31 +366,35 @@ export default {
       return dates;
     },
     async getEcpu() {
-      const url = new URL("ecpu_list.php", this.base);
+      const url = `${this.base}ecpu_list.php`;
+
       const result = await fetch(url);
       const data = await result.json();
       this.ecpu = data;
     },
     async getServices(ecpuId) {
-      const url = new URL("services_in_ecpu.php", this.base);
-      url.searchParams.append("id", ecpuId);
-      const result = await fetch(url);
+      let formData = new FormData();
+      const url = `${this.base}services_in_ecpu.php`;
+      formData.append("id", ecpuId);
+      const result = await fetch(url, { method: "post", body: formData });
       const data = await result.json();
 
       this.services = data[0].services;
     },
     async getDates(ecpuId) {
-      const url = new URL("additional_dates_in_ecpu.php", this.base);
-      url.searchParams.append("id", ecpuId);
-      const result = await fetch(url);
+      let formData = new FormData();
+      const url = `${this.base}additional_dates_in_ecpu.php`;
+      formData.append("id", ecpuId);
+      const result = await fetch(url, { method: "post", body: formData });
       const data = await result.json();
       this.dates = data;
     },
     async getBookingTimes(ecpuId, date) {
-      const url = new URL("booking_ecpu_on_date.php", this.base);
-      url.searchParams.append("ecpu", ecpuId);
-      url.searchParams.append("date", date);
-      const result = await fetch(url);
+      let formData = new FormData();
+      const url = `${this.base}booking_ecpu_on_date.php`;
+      formData.append("ecpu", ecpuId);
+      formData.append("date", date);
+      const result = await fetch(url, { method: "post", body: formData });
       const data = await result.json();
       this.bookingTimes = data.map((item) => item.time_booked);
     },
@@ -421,21 +425,26 @@ export default {
       this.dialog = true;
       this.finish.code = this.getCode();
       this.finish.body = body;
-      const url = new URL("http://mrg.danat.su/services/priem/send_to_db.php");
-      url.searchParams.append(
+      let formData = new FormData();
+      const url = "/services/priem/send_to_db.php";
+      formData.append(
         "Col_depart",
         this.ecpu.find((i) => i.id == this.ecpuModel).kod
       );
-      url.searchParams.append("col_usluga", this.service2Model);
-      url.searchParams.append("col_suokey", this.cellphoneModel);
-      url.searchParams.append("col_code", this.finish.code);
-      url.searchParams.append("col_email", this.emailModel);
-      url.searchParams.append("col_ctime", `${this.timeModel}:00`);
-      url.searchParams.append(
+      formData.append("col_usluga", this.service2Model);
+      formData.append("col_suokey", this.cellphoneModel);
+      formData.append("col_code", this.finish.code);
+      formData.append("col_email", this.emailModel);
+      formData.append("col_fio", this.nameModel);
+      formData.append("col_ecpukod", this.ecpuModel);
+      formData.append("col_truedate", this.dateModel);
+      formData.append("col_ctime", `${this.timeModel}:00`);
+
+      formData.append(
         "col_cdate",
         this.dateModel.split(".").reverse().join("-")
       );
-      const result = await fetch(url);
+      const result = await fetch(url, { method: "post", body: formData });
       const data = await result.json();
 
       const serviceKey = this.serviceModel + "-" + this.service2Model;
