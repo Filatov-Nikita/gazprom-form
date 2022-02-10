@@ -154,7 +154,7 @@
           <h2>Вы записаны на прием</h2>
           <div style="clear: both"></div>
           <p>
-            Ваша запись в УЦПУ по адресу
+            Ваша запись в ЕЦПУ по адресу
             <span id="ad1"
               >{{ curEcpu[ecpuModel]?.label }}
               {{ curDate[dateModel]?.label }}</span
@@ -439,6 +439,7 @@ export default {
       formData.append("col_ecpukod", this.ecpuModel);
       formData.append("col_truedate", this.dateModel);
       formData.append("col_ctime", `${this.timeModel}:00`);
+      formData.append("adress",  `${this.ecpu.find((i) => i.id == this.ecpuModel).name} ${this.ecpu.find((i) => i.id == this.ecpuModel).adress}`);
 
       formData.append(
         "col_cdate",
@@ -549,9 +550,9 @@ function getServicePivot() {
   display: flex;
 }
 .okno {
-  height: 400px;
+  height: 100%;
   text-align: center;
-  padding: 40px;
+  padding:0 40px;
   color: #000000;
   position: absolute;
   top: 0;

@@ -26,7 +26,7 @@ export default {
   position: fixed;
   width: 100%;
   max-width: 500px;
-  height: 50vh;
+  height: 340px;
   overflow-x: hidden;
   padding: 20px;
   background: white;

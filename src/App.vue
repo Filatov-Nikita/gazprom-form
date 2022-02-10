@@ -31,6 +31,10 @@ input {
   box-sizing: border-box;
 }
 
+select option:disabled {
+  color: #d3d3d3
+}
+
 form {
   display: block;
   width: 100%;
