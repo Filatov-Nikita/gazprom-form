@@ -13,10 +13,11 @@
     "vuex": "^4.0.0-0"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "~4.5.0",
-    "@vue/cli-plugin-vuex": "~4.5.0",
-    "@vue/cli-service": "~4.5.0",
-    "@vue/compiler-sfc": "^3.0.0"
+    "@vue/cli-plugin-babel": "~5.0.1",
+    "@vue/cli-plugin-vuex": "~5.0.1",
+    "@vue/cli-service": "~5.0.1",
+    "@vue/compiler-sfc": "^3.0.0",
+    "tailwindcss": "^3.0.23"
   },
   "_id": "gaz-form@0.1.0",
   "readme": "ERROR: No README data found!"
