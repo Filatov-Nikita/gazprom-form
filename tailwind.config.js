@@ -1,11 +1,20 @@
 module.exports = {
   prefix: 'tw-',
-  content: ["./src/**/*.{js,vue}"],
+  content: ['./src/**/*.{js,vue}'],
+  safelist: [
+    'tw-bg-primary',
+    'tw-bg-red-700',
+  ],
   theme: {
-    extend: {},
-    colors: {
-      primary: '#017AC3'
+    fontFamily: {
+      roboto: ['roboto', 'sans-serif']
+    },
+    extend: {
+      colors: {
+        primary: '#017AC3',
+        platina: '#7E7E7E'
+      },
     },
   },
   plugins: [],
-}
+};

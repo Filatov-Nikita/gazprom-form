@@ -21,34 +21,23 @@ export default {
 @tailwind utilities;
 
 @layer base {
-  #app {
-    font-family: Avenir, Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    color: #2c3e50;
+  body {
+    @apply tw-font-roboto tw-text-base tw-p-8 tw-bg-gray-100;
   }
 
-  label,
+  abbr {
+    text-decoration: none;
+  }
+
+  input,
   select,
-  input {
-    display: block;
-    width: 100%;
-    margin-bottom: 2px;
-    height: 30px;
-    box-sizing: border-box;
-  }
-
-  select option:disabled {
-    color: #d3d3d3;
-  }
-
-  form {
-    display: block;
-    width: 100%;
-  }
-
   button {
-    margin-top: 20px;
+    outline: none;
+  }
+
+  label, input, select {
+    display: block;
+    width: 100%;
   }
 }
 </style>
