@@ -18,7 +18,7 @@
 
 <script>
 import { useField, Field } from 'vee-validate';
-import { computed, toRefs, watch } from 'vue';
+import { computed, toRefs } from 'vue';
 import useRules from '@/compositions/useRules';
 
 export default {
@@ -31,36 +31,22 @@ export default {
     options: {
       default() {
         return [
-          { label: 'Да', value: 'Yes' },
-          { label: 'Нет', value: 'No' },
+          { label: 'Нет', value: '1' },
+          { label: 'Да', value: '2' },
         ];
       },
       type: Array,
     },
   },
   setup(props) {
-    const { rules } = toRefs(props);
-    const { value, errorMessage, handleChange } = useField(
-      props.name,
-      props.rules,
-      {
-        label: props.label,
-      }
-    );
+    const { rules, name } = toRefs(props);
+    const { value, errorMessage, handleChange } = useField(name, props.rules, { label: props.label });
     const { hasRequiredRule } = useRules(rules);
 
-    const optionsMap = computed(() => {
-      return props.options.reduce((acc, opt) => {
-        acc[opt.value] = opt;
-        return acc;
-      }, {});
-    });
-
-    const currentVal = computed(() => value.value?.value || '');
+    const currentVal = computed(() => value.value || '');
 
     const onChange = (e) => {
-      const val = optionsMap.value[e.target.value] || '';
-      handleChange(val);
+      handleChange(e.target.value);
     };
 
     return {

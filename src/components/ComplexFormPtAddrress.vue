@@ -8,14 +8,14 @@
         ref="cityRef"
         rules="required"
         label="Город / н.п."
-        :name="`${path}.address.city`"
+        :name="`${path}.city`"
         :fetcher="fetchCities"
         :option="optionCity"
       />
       <AppFilterSelect
         ref="streetRef"
         :disabled="!city"
-        :name="`${path}.address.street`"
+        :name="`${path}.street`"
         rules="required"
         label="Улица"
         :fetcher="fetchStreets"
@@ -24,7 +24,7 @@
       <AppFilterSelect
         ref="buildingRef"
         :disabled="!street"
-        :name="`${path}.address.building`"
+        :name="`${path}.house`"
         rules="required"
         label="Дом"
         :fetcher="fetchBuildings"
@@ -33,7 +33,7 @@
       <AppInput
         ref="flatRef"
         :disabled="!building"
-        :name="`${path}.address.flat`"
+        :name="`${path}.flat`"
         rules="required"
         label="Квартира"
       />
@@ -59,12 +59,12 @@ export default {
   },
   setup(props) {
     const store = useStore();
-    const city = useFieldValue(`${props.path}.address.city`);
-    const cityMeta = useFieldValue(`${props.path}.address.city-s`);
-    const street = useFieldValue(`${props.path}.address.street`);
-    const streetMeta = useFieldValue(`${props.path}.address.street-s`);
-    const building = useFieldValue(`${props.path}.address.building`);
-    const buildingMeta = useFieldValue(`${props.path}.address.building-s`);
+    const city = useFieldValue(`${props.path}.city`);
+    const cityMeta = useFieldValue(`${props.path}.city-s`);
+    const street = useFieldValue(`${props.path}.street`);
+    const streetMeta = useFieldValue(`${props.path}.street-s`);
+    const building = useFieldValue(`${props.path}.house`);
+    const buildingMeta = useFieldValue(`${props.path}.house-s`);
     const cityRef = ref(null);
     const streetRef = ref(null);
     const buildingRef = ref(null);

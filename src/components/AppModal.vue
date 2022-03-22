@@ -3,7 +3,7 @@
     <div class="app-modal" v-if="modelValue">
       <slot />
     </div>
-    <div v-if="modelValue" class="zatemnenie"></div>
+    <div v-if="modelValue" @click="$emit('update:modelValue')" class="overlay"></div>
   </teleport>
 </template>
 
@@ -15,6 +15,13 @@ export default {
       type: Boolean,
     },
   },
+  emits: ['update:modelValue'],
+  watch: {
+    modelValue(val) {
+      if(val) document.body.style.overflow = 'hidden';
+      else document.body.style.overflow = '';
+    }
+  }
 };
 </script>
 
@@ -25,18 +32,19 @@ export default {
   transform: translate(-50%, -50%);
   position: fixed;
   width: 100%;
-  max-width: 500px;
-  height: 340px;
-  overflow-x: hidden;
+  max-width: 650px;
+  max-height: 440px;
+  overflow: scroll;
   padding: 20px;
   background: white;
   z-index: 999;
-  /* box-shadow: 12px 12px 2px 1px rgba(0, 0, 255, .2); */
+  @apply tw-rounded-2xl;
 }
-.zatemnenie {
-  position: absolute;
+
+.overlay {
+  position: fixed;
   width: 100%;
-  height: 100vh;
+  height: 100%;
   background-color: rgb(0 0 0 / 50%);
   top: 0;
   left: 0;

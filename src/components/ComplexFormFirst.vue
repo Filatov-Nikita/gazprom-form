@@ -4,17 +4,17 @@
     <div class="tw-space-y-1 tw-mb-4 tw-max-w-lg">
       <AppRadio
         rules="required"
-        name="dogovor"
+        name="contract_kind.tp_contract_kind_radio"
         label="Договор комплексного обслуживания"
-        value="complex"
+        value="1"
       />
       <AppRadio
         rules="required"
-        name="dogovor"
+        name="contract_kind.tp_contract_kind_radio"
         label="Договор о подключении (технологическом присоединении)"
-        value="connect"
+        value="2"
       />
-      <AppErrorMessage name="dogovor" />
+      <AppErrorMessage name="contract_kind.tp_contract_kind_radio" />
     </div>
     <AppButton @click="modal = !modal">Подробнее</AppButton>
     <AppModal v-model="modal">
@@ -60,16 +60,11 @@
 </template>
 
 <script>
-import AppModal from '@/components/AppModal';
-
 export default {
   data() {
     return {
       modal: false,
     };
-  },
-  components: {
-    AppModal,
   },
 };
 </script>

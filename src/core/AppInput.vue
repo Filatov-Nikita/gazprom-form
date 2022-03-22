@@ -43,7 +43,7 @@ export default {
         disabled: disabled.value,
         id: props.name,
         class: ['app-input', { 'app-input--textarea': isTextArea.value }],
-        type: type.value,
+        type: type.value === 'date' ? 'text' : type.value,
         value: value.value,
         onInput: handleChange,
       });
@@ -51,7 +51,9 @@ export default {
       let input = inputSrc;
 
       if (props.type === 'tel') {
-        input = withDirectives(inputSrc, [[vmaska, '+7 (###) ### ## ##']]);
+        input = withDirectives(inputSrc, [[vmaska, '+7(###)###-##-##']]);
+      } else if(props.type === 'date') {
+        input = withDirectives(inputSrc, [[vmaska, '##.##.####']])
       }
 
       return h('div', [

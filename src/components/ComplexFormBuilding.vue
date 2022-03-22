@@ -2,49 +2,49 @@
   <AppFormSection>
     <AppFormTitle>Данные об объекте капитального строительства</AppFormTitle>
     <AppFieldset>
-      <AppInput name="building.name" rules="required" label="Наименование" />
+      <AppInput name="object_data.name" rules="required" label="Наименование" />
       <AppSelect
-        name="building.type"
+        name="object_data.kind"
         rules="required"
         label="Вид"
         :options="typeOpts"
       />
       <AppInput
-        name="building.number"
+        name="object_data.cadastral_number"
         rules="required"
         label="Кадастровый номер участка"
       />
       <ComplexFormPtAddrress
-        path="building"
+        path="object_data.address"
         title="Адрес объекта газификации"
       />
       <AppSelect
         cantEmpty
-        name="building.input"
+        name="object_data.commissioning"
         rules="required"
         label="Ввод объекта в эксплуатацию"
         :options="inputOpts"
       />
       <AppInput
-        v-if="input?.value === '1'"
+        v-if="input === '1'"
         type="date"
-        name="building.inputDate"
+        name="object_data.commissioning_date"
         rules="required"
         label="Дата ввода объекта в эксплуатацию"
       />
       <AppInput
-        v-else-if="input?.value === '2'"
+        v-else-if="input === '2'"
         type="date"
-        name="building.inputDateAbout"
+        name="object_data.approximate_date"
         rules="required"
         label="Ориентировочная дата завершения строительства"
       />
 
       <FieldArray
-        name="building.steps"
+        name="object_data.object_stages"
         v-slot="{ fields, push, remove }"
       >
-        <AppFormCard v-if="input?.value === '3'">
+        <AppFormCard v-if="input === '3'">
           <AppFormTitle level="3"
             >Поэтапный ввод объкта в эксплуатацию</AppFormTitle
           >
@@ -53,13 +53,14 @@
               <div>Этап {{ idx + 1 }}</div>
               <AppInput
                 type="date"
-                :name="`building.steps[${idx}].plan`"
+                :name="`object_data.object_stages[${idx}].design_time`"
                 :label="`План. срок проектирования ЭПУ`"
               />
               <AppInput
+                rules="required"
                 type="date"
-                :name="`building.steps[${idx}].date`"
-                :label="`Дата ввода объекта	`"
+                :name="`object_data.object_stages[${idx}].input_date`"
+                :label="`Дата ввода объекта`"
               />
               <AppButton
                 v-if="idx > 0"
@@ -71,13 +72,13 @@
               >
             </div>
           </AppFieldset>
-          <AppButton class="tw-mt-6" @click="push({ plan: '', date: '' })">
+          <AppButton class="tw-mt-6" @click="push({ design_time: '', input_date: '' })">
             Добавить этап
           </AppButton>
         </AppFormCard>
       </FieldArray>
       <FieldArray
-        name="building.plan"
+        name="object_data.mchrg_stages"
         v-slot="{ fields, push, remove }"
       >
         <AppFormCard v-if="input">
@@ -86,8 +87,10 @@
           >
           <AppFieldset>
             <div v-for="(field, idx) in fields" :key="field.key">
+              <AppInput type="hidden" :name="`object_data.mchrg_stages[${idx}].stage`" />
               <AppInput
-                :name="`building.plan[${idx}]`"
+                rules="required"
+                :name="`object_data.mchrg_stages[${idx}].value`"
                 :label="`${idx + 1} этап - расход`"
               />
               <AppButton
@@ -100,13 +103,13 @@
               >
             </div>
           </AppFieldset>
-          <AppButton class="tw-mt-6" @click="push('')">
+          <AppButton class="tw-mt-6" @click="push({ stage: `${fields.length + 1}`, value: '' })">
             Добавить этап
           </AppButton>
         </AppFormCard>
       </FieldArray>
       <FieldArray
-        name="building.max"
+        name="object_data.connection_points"
         v-slot="{ fields, push, remove }"
       >
         <AppFormCard v-if="input">
@@ -117,7 +120,12 @@
           <AppFieldset>
             <div v-for="(field, idx) in fields" :key="field.key">
               <AppInput
-                :name="`building.max[${idx}]`"
+                type="hidden"
+                :name="`object_data.connection_points[${idx}].point`"
+              />
+              <AppInput
+                rules="required"
+                :name="`object_data.connection_points[${idx}].value`"
                 :label="`Точка ${idx + 1}: Часовой расход газа, м3/час`"
               />
               <AppButton
@@ -130,7 +138,7 @@
               >
             </div>
           </AppFieldset>
-          <AppButton class="tw-mt-6" @click="push('')">
+          <AppButton class="tw-mt-6" @click="push({ point: `${fields.length + 1}`, value: '' })">
             Добавить точку
           </AppButton>
         </AppFormCard>
@@ -138,34 +146,34 @@
 
       <AppSelect
         cantEmpty
-        name="building.s1"
+        name="object_data.networks_belong_third_parties"
         :options="s1Opts"
         label="Сети ГРП, ГПП, принадлежат третьим лицам?"
       />
       <AppSelect
         cantEmpty
-        name="building.s2"
+        name="object_data.connection_using_infrastructure"
         label="Подключение осуществляется с использованием объектов инфраструктуры и другого имущества общего пользования?"
       />
       <AppSelect
         cantEmpty
-        name="building.s3"
+        name="object_data.connection_integrated_development"
         label="Подключение объектов капитального строительства, расположенных в пределах территории, подлежащей комплексному освоению?"
       />
       <AppSelect
         cantEmpty
-        name="building.s4"
+        name="object_data.right_to_use_power"
         label="Подключение осуществляется с уступкой права на использование мощности?"
       />
       <AppSelect
-        disabled
+        :disabled="radio !== '2'"
         cantEmpty
-        name="building.s5"
+        name="object_data.gasification_contract"
         label="Заполнить заявку на заключение договора на газификацию в пределах границ земельного участка заявителя?"
       />
       <AppSelect
         cantEmpty
-        name="building.s6"
+        name="object_data.gas_equipment"
         label="Подобрать газовое оборудование?"
       />
     </AppFieldset>
@@ -180,9 +188,9 @@ import { useFieldValue } from 'vee-validate';
 export default {
   setup() {
     const s1Opts = markRaw([
-      { label: 'Не знаю', value: '?' },
-      { label: 'Да', value: 'Yes' },
-      { label: 'Нет', value: 'No' },
+      { label: 'Не знаю', value: '3' },
+      { label: 'Да', value: '2' },
+      { label: 'Нет', value: '1' },
     ]);
 
     const typeOpts = markRaw([
@@ -200,13 +208,15 @@ export default {
       },
     ]);
 
-    const input = useFieldValue('building.input');
+    const input = useFieldValue('object_data.commissioning');
+    const radio = useFieldValue('contract_kind.tp_contract_kind_radio');
 
     return {
       typeOpts,
       inputOpts,
-      input,
       s1Opts,
+      input,
+      radio,
     };
   },
   components: {

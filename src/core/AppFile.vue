@@ -3,15 +3,18 @@
     <AppLabel :label="label" :for="name" :required="hasRequiredRule" />
     <VField v-bind="{ name, rules, label }" v-slot="{ handleChange, errorMessage }">
       <AppButton class="tw-relative">
-        <span>{{ fileName ? 'Изменить' : 'Прикрепить' }}</span>
+        <span>{{ fileName.length > 0 ? 'Изменить' : 'Прикрепить' }}</span>
         <input
+          v-bind="$attrs"
           :id="name"
           class="app-file__input"
           type="file"
           @change="onChange($event, handleChange)"
         />
       </AppButton>
-      <div>{{ fileName }}</div>
+      <div>
+        {{ fileName.join(', ') }}
+      </div>
       <AppErrorMessage v-if="errorMessage" :msg="errorMessage" />
     </VField>
   </div>
@@ -19,31 +22,33 @@
 <script>
 import { Field } from 'vee-validate';
 import useRules from '@/compositions/useRules';
-import { toRef } from '@vue/reactivity';
+import { toRef, ref } from '@vue/reactivity';
 
 export default {
+  inheritAttrs: false,
   props: {
     ...Field.props,
   },
   setup(props) {
+    const fileName = ref([]);
     const rules = toRef(props, 'rules');
     const { hasRequiredRule } = useRules(rules);
+
     return {
       hasRequiredRule,
-    };
-  },
-  data() {
-    return {
-      fileName: '',
+      fileName
     };
   },
   methods: {
     onChange(e, handleChange) {
-      const file = e.target.files[0];
-      if (file) {
-        handleChange(file);
-        this.fileName = file.name;
+      const files = e.target.files;
+      if(!files || files.length <= 0) return;
+
+      this.fileName = [];
+      for(let file of files) {
+        this.fileName.push(file.name);
       }
+      handleChange(files);
     },
   },
 };

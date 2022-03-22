@@ -3,19 +3,44 @@
     <h1 class="tw-text-5xl tw-text-neutral-900 tw-font-medium tw-mb-4">
       Добавление заявки
     </h1>
-    <form @submit.prevent="onSubmit">
+    <form>
       <ComplexFormFirst />
-      <ComplexFormPrimary />
+      <ComplexFormPrimary @save="onSubmit({ is_draft: 1 })" />
       <ComplexFormPersonal />
       <ComplexFormAngel />
       <ComplexFormBuilding />
       <ComplexFormUpload />
+      <ComplexFormAdditional />
       <ComplexFormNotifyMethod />
       <ComplexFormGetMethod />
       <AppFormSection>
-        <AppButton type="submit">Отправить</AppButton>
+        <div class="tw-flex tw-space-x-3">
+          <AppButton @click="submitModal = true">Отправить</AppButton>
+          <AppButton @click="onSubmit({ is_draft: 1 })">Сохранить черновик</AppButton>
+          <AppButton @click="onSubmit({ is_draft: 1, is_sign: 1 })">Сформировать проект заявки</AppButton>
+          <a href="http://mrg.danat.su/preconditionsrequests/techconnection/" alt="закрыть">
+            <AppButton>Закрыть</AppButton>
+          </a>
+        </div>
       </AppFormSection>
     </form>
+    <AppModal v-model="submitModal">
+      <div class="tw-text-3xl tw-mb-6">Вы хотите подписать заявку с помощью электронной подписи?</div>
+      <div class="tw-mb-4">
+        Если вы выберете "Да", Вам понадобится электронная подпись.
+        Если вы выберете "Нет", после отправки Вам необходимо прийти в офис лично и подписать заявку.
+      </div>
+      <div class="tw-flex tw-space-x-3">
+        <AppButton class="tw-w-1/3" @click="onSubmit({ is_sign: 1 })">Да</AppButton>
+        <AppButton class="tw-w-1/3" @click="onSubmit">Нет</AppButton>
+        <AppButton class="tw-w-1/3" @click="submitModal = false">Отмена</AppButton>
+      </div>
+    </AppModal>
+    <teleport to="body">
+      <div v-if="isSubmitting" style="z-index: 99999" class="tw-fixed tw-top-0 tw-left-0 tw-right-0 tw-bottom-0 tw-bg-black tw-bg-opacity-50 tw-flex tw-justify-center tw-items-center">
+        <div class=" tw-text-5xl tw-text-white">Идёт отправка, подождите...</div>
+      </div>
+    </teleport>
   </div>
 </template>
 
@@ -28,17 +53,24 @@ import ComplexFormBuilding from '@/components/ComplexFormBuilding';
 import ComplexFormGetMethod from '@/components/ComplexFormGetMethod';
 import ComplexFormNotifyMethod from '@/components/ComplexFormNotifyMethod';
 import ComplexFormUpload from '@/components/ComplexFormUpload';
+import ComplexFormAdditional from '@/components/ComplexFormAdditional';
+
+import flatten from 'flat';
 import { useForm } from 'vee-validate';
-import { computed } from 'vue';
 import { useStore } from 'vuex';
+import { nextTick, ref } from 'vue';
+import complexFormData from '@/test/complexFormData';
 
 export default {
   setup() {
+    const submitModal = ref(false);
     const store = useStore();
     const initialValues = getInitVals();
 
-    const { values, validate, handleSubmit } = useForm({
-      initialValues,
+    const { values, validate, setErrors, resetForm, isSubmitting } = useForm();
+
+    nextTick(() => {
+      resetForm({ values: initialValues });
     });
 
     const scrollToFirstError = (errors) => {
@@ -49,20 +81,40 @@ export default {
       el.scrollIntoView({ behavior: 'smooth' });
     };
 
-    const perform = handleSubmit(async (values) => {
-      const data = await store.dispatch('complexForm/create', { data: values });
-      console.log(data);
-      alert('success');
-    });
+    const onSubmit = async ({
+      is_draft = 0,
+      is_sign = 0,
+      is_letter = 0,
+      request_id = 0
+    }) => {
+      if(is_draft === 0) {
+        const { errors, valid } = await validate();
+        if (!valid) return scrollToFirstError(errors);
+      }
 
-    const onSubmit = async () => {
-      const { errors, valid } = await validate();
-      if (!valid) return scrollToFirstError(errors);
+      const perform = async () => {
+        const data = await store.dispatch('complexForm/create',
+          { data: values, meta: { is_draft, is_sign, is_letter, request_id } }
+        );
+
+        if (!Array.isArray(data.errors)) {
+          const errors = flatten(data.errors);
+          setErrors(errors)
+          scrollToFirstError(errors);
+        } else {
+          console.log(data);
+          submitModal.value = false;
+          alert('Форма успешно отправлена');
+        }
+      };
+
       perform();
     };
 
     return {
       onSubmit,
+      isSubmitting,
+      submitModal
     };
   },
   components: {
@@ -74,20 +126,22 @@ export default {
     ComplexFormNotifyMethod,
     ComplexFormGetMethod,
     ComplexFormUpload,
+    ComplexFormAdditional
   },
 };
 
 function getInitVals() {
   return {
-    t: '',
-    dogovor: 'complex',
-    primary: getPrimary(),
-    profile: getProfile(),
-    angel: getAngel(),
-    building: getBuilding(),
-    notifyMethod: getNotifyMethod(),
-    upload: getUpload(),
-    getMethod: getMethod(),
+    comment: '',
+    files: null,
+    contract_kind: { tp_contract_kind_radio: '1' },
+    primary_information: getPrimary(),
+    personal_data: getProfile(),
+    proxy_data: getAngel(),
+    object_data: getBuilding(),
+    notifications_receiving: getNotifyMethod(),
+    documents_obtaining: getObtaining(),
+    documents_upload: getUpload(),
   };
 }
 
@@ -95,19 +149,19 @@ function getAddress() {
   return {
     city: '',
     street: '',
-    building: '',
+    house: '',
     flat: '',
   };
 }
 
 function getPassport() {
   return {
-    type: { label: 'Паспорт гражданина РФ', value: 'RF' },
-    serial: '',
-    number: '',
-    kod: '',
-    who: '',
-    date: '',
+    document_type: '1',
+    document_series: '',
+    document_id: '',
+    division_code: '',
+    issued_by: '',
+    document_date_issue: '',
   };
 }
 
@@ -115,69 +169,64 @@ function getContacts() {
   return {
     fax: '',
     email: '',
-    phone1: '',
-    phone2: '',
+    phone_number_1: '',
+    phone_number_2: '',
   };
 }
 
 function getFio() {
   return {
-    lastname: '',
+    last_name: '',
     name: '',
-    patronymic: '',
+    second_name: '',
   };
 }
 
 function getPrimary() {
   return {
-    purpose: { label: 'Первичное подключение', value: '3' },
-    hasCalc: { label: 'Нет', value: 'No' },
-    plan: { label: 'Не знаю', value: '?' },
-    gasLoose: '',
-    hasTu: { label: 'Нет', value: 'No' },
-    tu: {
-      number: '',
-      date: '',
-    },
+    ownership_type: '2',
+    connection_purpose: '3',
+    mchrg: '1',
+    mchrg_radio: '2',
+    mchrg_value: '',
+    tu: '1',
+    tu_number: '',
+    tu_date: '',
+    add1: false,
+    add2: false,
+    add3: false,
+    add4: false,
+    add5: false,
+    add6: false,
+    add7: false,
   };
 }
 
 function getProfile() {
   return {
-    type: { label: 'Юридическое лицо', value: '2' },
-    people: {
-      inn: '',
-      passport: getPassport(),
-      address: getAddress(),
-      ...getFio(),
-      ...getContacts(),
-    },
-    companies: {
-      kpp: '',
-      ogrn: '',
-      shortName: '',
-      fullName: '',
-      inn: '',
-      gasPotreb: { label: 'Коммерческие цели', value: 'commerc' },
-      okved: '',
-      address: getAddress(),
-      passport: getPassport(),
-      ...getContacts(),
-    },
+    organization_inn: '',
+    kpp: '',
+    ogrn: '',
+    organization_brief_name: '',
+    organization_full_name: '',
+    consumption_character: '1',
+    economic_activity_type: '',
+    inn: '',
+    mailing_address: getAddress(),
+    ...getFio(),
+    ...getContacts(),
+    ...getPassport(),
   };
 }
 
 function getAngel() {
   return {
-    uncommerc: { label: 'Нет', value: 'No' },
-    dov: { label: 'Нет', value: 'No' },
-    dovData: {
-      number: '',
-      until: '',
-      date: '',
-    },
-    address: getAddress(),
-    passport: getPassport(),
+    proxy: '1',
+    non_profit_association_representative: '1',
+    proxy_date: '',
+    proxy_end: '',
+    mailing_address: getAddress(),
+    ...getPassport(),
     ...getFio(),
     ...getContacts(),
   };
@@ -186,55 +235,65 @@ function getAngel() {
 function getBuilding() {
   return {
     name: '',
-    type: { label: 'Индивидуальное жилищное строительство', value: '1' },
-    number: '',
+    kind: '1',
+    cadastral_number: '',
     address: getAddress(),
-    input: { label: 'Объект построен', value: '1' },
-    inputDate: '',
-    inputDateAbout: '',
-    plan: [''],
-    max: [''],
-    steps: [{ plan: '', date: '' }],
-    s1: { label: 'Нет', value: 'No' },
-    s2: { label: 'Нет', value: 'No' },
-    s3: { label: 'Нет', value: 'No' },
-    s4: { label: 'Нет', value: 'No' },
-    s5: { label: 'Да', value: 'Yes' },
-    s6: { label: 'Нет', value: 'No' },
+    commissioning: '1',
+    commissioning_date: '',
+    approximate_date: '',
+    mchrg_stages: [{ stage: '1', value: '' }],
+    connection_points: [{ point: '1', value: '' }],
+    object_stages: [{ design_time: '', input_date: '' }],
+    networks_belong_third_parties: '1',
+    connection_using_infrastructure: '1',
+    connection_integrated_development: '1',
+    right_to_use_power: '1',
+    gasification_contract: '2',
+    gas_equipment: '1',
+  };
+}
+
+function getObtaining() {
+  return {
+    obtaining_method: '1',
+    mailing_address: getAddress(),
   };
 }
 
 function getUpload() {
   return {
-    s1: null,
-    s2: null,
-    s3: null,
-    s4: null,
-    s5: null,
-    s6: null,
-    s7: null,
-    s8: null,
-    s9: null,
-    s10: null,
-    s11: null,
-  };
-}
-
-function getMethod() {
-  return {
-    type: { label: 'По почте', value: '1' },
-    address: getAddress(),
-    comment: '',
-    attached: null,
+    identity_document: null,
+    registration_inn_kpp_certificate: null,
+    land_documents: null,
+    situational_plan: null,
+    topographic_map: null,
+    regulations_copy: null,
+    ogrn: null,
+    information_letter: null,
+    signatures_sample: null,
+    contract_signing_person: null,
+    sign_documents_right: null,
+    capital_construction_object_ownership: null,
+    proxy: null,
+    general_meeting_resolution: null,
+    main_subscriber_consent: null,
+    infrastructure_facilities_contract: null,
+    right_to_use_power: null,
+    certified_right_to_use_power: null,
+    gas_consumption_reduction_document: null,
+    capital_construction_object_ownership: null,
+    mchrg_calculation: null,
+    gas_transportation_organization_conclusion: null,
+    ogrnip: null,
   };
 }
 
 function getNotifyMethod() {
   return {
-    sms: false,
-    email: false,
-    phone: '',
-    emailAddress: '',
+    sms_checkbox: false,
+    email_checkbox: false,
+    sms: '',
+    email: '',
   };
 }
 </script>

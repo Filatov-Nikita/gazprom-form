@@ -3,37 +3,37 @@
     <AppFieldset>
       <AppSelect
         cantEmpty
-        :name="`${path}.passport.type`"
+        :name="`${path}.document_type`"
         rules="required"
         label="Наименование документа"
         :options="typeOpts"
       />
       <AppInput
-        v-maska="'####'"
-        :name="`${path}.passport.serial`"
-        rules="required|digits:4"
+        v-maska="'## ##'"
+        :name="`${path}.document_series`"
+        rules="required"
         label="Серия"
       />
       <AppInput
         v-maska="'######'"
-        :name="`${path}.passport.number`"
+        :name="`${path}.document_id`"
         rules="required|digits:6"
         label="Номер"
       />
       <AppInput
         v-maska="'###-###'"
-        :name="`${path}.passport.kod`"
+        :name="`${path}.division_code`"
         rules="required|length:7"
         label="Код подразделения"
       />
       <AppInput
-        :name="`${path}.passport.who`"
+        :name="`${path}.issued_by`"
         rules="required"
         label="Кем выдан"
       />
       <AppInput
         type="date"
-        :name="`${path}.passport.date`"
+        :name="`${path}.document_date_issue`"
         rules="required"
         label="Дата выдачи документа"
       />
@@ -52,7 +52,7 @@ export default {
     },
   },
   setup() {
-    const typeOpts = markRaw([{ label: 'Паспорт гражданина РФ', value: 'RF' }]);
+    const typeOpts = markRaw([{ label: 'Паспорт гражданина РФ', value: '1' }]);
 
     return {
       typeOpts,

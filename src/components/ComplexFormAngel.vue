@@ -3,23 +3,23 @@
     <AppFormTitle>Данные доверенного лица</AppFormTitle>
     <AppFieldset>
       <AppSelect
-        name="angel.dov"
+        name="proxy_data.proxy"
         rules="required"
         label="Заявку подаю по доверенности"
       />
 
-      <template v-if="dov?.value === 'Yes'">
-        <ComplexFormPtFio path="angel" />
-        <ComplexFormPtPassport path="angel" />
-        <AppInput name="angel.dovData.number" rules="required" label="Номер доверенности" />
-        <AppInput type="date" name="angel.dovData.date" rules="required" label="Дата доверенности" />
-        <AppInput type="date" name="angel.dovData.until" rules="required" label="Действительна до" />
-        <ComplexFormPtAddrress path="angel" title="Почтовый адрес" />
-        <ComplexFormPtContacts path="angel" />
+      <template v-if="dov === '2'">
+        <ComplexFormPtFio path="proxy_data" />
+        <ComplexFormPtPassport path="proxy_data" />
+        <AppInput name="proxy_data.proxy_number" rules="required" label="Номер доверенности" />
+        <AppInput type="date" name="proxy_data.proxy_date" rules="required" label="Дата доверенности" />
+        <AppInput type="date" name="proxy_data.proxy_end" rules="required" label="Действительна до" />
+        <ComplexFormPtAddrress path="proxy_data.mailing_address" title="Почтовый адрес" />
+        <ComplexFormPtContacts path="proxy_data" />
       </template>
 
       <AppSelect
-        name="angel.uncommerc"
+        name="proxy_data.non_profit_association_representative"
         label="Являюсь представителем некоммерческого объединения"
       />
     </AppFieldset>
@@ -35,7 +35,7 @@ import ComplexFormPtPassport from '@/components/ComplexFormPtPassport';
 import { useFieldValue } from 'vee-validate';
 export default {
   setup() {
-    const dov = useFieldValue('angel.dov');
+    const dov = useFieldValue('proxy_data.proxy');
 
     return {
       dov,
