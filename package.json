@@ -10,6 +10,8 @@
     "@vee-validate/i18n": "^4.5.10",
     "@vee-validate/rules": "^4.5.10",
     "core-js": "^3.6.5",
+    "deep-cleaner": "^1.2.1",
+    "flat": "^5.0.2",
     "maska": "^1.5.0",
     "object-to-formdata": "^4.4.2",
     "vee-validate": "^4.5.10",
