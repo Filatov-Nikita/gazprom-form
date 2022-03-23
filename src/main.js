@@ -32,6 +32,8 @@ setLocale('ru');
 
 const app = createApp(App);
 
+app.config.globalProperties.$accept = 'image/png,image/jpeg,application/pdf';
+
 app.directive('maska', maska);
 app.use(clickOutside);
 
