@@ -31,8 +31,7 @@
         rules="required"
         label="Кем выдан"
       />
-      <AppInput
-        type="date"
+      <AppDatePicker
         :name="`${path}.document_date_issue`"
         rules="required"
         label="Дата выдачи документа"

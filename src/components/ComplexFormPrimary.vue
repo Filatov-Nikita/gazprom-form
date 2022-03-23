@@ -43,7 +43,7 @@
       />
       <template v-if="showTUInputs">
         <AppInput rules="required" name="primary_information.tu_number" label="Номер ТУ" />
-        <AppInput type="date" rules="required" name="primary_information.tu_date" label="Дата ТУ" />
+        <AppDatePicker rules="required" name="primary_information.tu_date" label="Дата ТУ" />
       </template>
     </div>
   </AppFormSection>

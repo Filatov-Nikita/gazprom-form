@@ -25,16 +25,14 @@
         label="Ввод объекта в эксплуатацию"
         :options="inputOpts"
       />
-      <AppInput
+      <AppDatePicker
         v-if="input === '1'"
-        type="date"
         name="object_data.commissioning_date"
         rules="required"
         label="Дата ввода объекта в эксплуатацию"
       />
-      <AppInput
+      <AppDatePicker
         v-else-if="input === '2'"
-        type="date"
         name="object_data.approximate_date"
         rules="required"
         label="Ориентировочная дата завершения строительства"
@@ -51,14 +49,12 @@
           <AppFieldset>
             <div v-for="(field, idx) in fields" :key="field.key">
               <div>Этап {{ idx + 1 }}</div>
-              <AppInput
-                type="date"
+              <AppDatePicker
                 :name="`object_data.object_stages[${idx}].design_time`"
                 :label="`План. срок проектирования ЭПУ`"
               />
-              <AppInput
+              <AppDatePicker
                 rules="required"
-                type="date"
                 :name="`object_data.object_stages[${idx}].input_date`"
                 :label="`Дата ввода объекта`"
               />
