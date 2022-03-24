@@ -4,12 +4,26 @@ import cleaner from 'deep-cleaner';
 const base =
   'http://mrg.danat.su/local/templates/gas/components/openregion/news/requests-tech-connection/openregion/news.edit/.default/ajax/';
 
+const socialBase =
+  'http://mrg.danat.su/local/templates/gas/components/openregion/news/requests-tech-connection-social/openregion/news.edit/.default/ajax/';
+
+const emailBase = 'http://mrg.danat.su/local/templates/gas/ajax/';
+
 export default {
   namespaced: true,
   actions: {
+    async getEmail() {
+      const url = new URL('user_mail.php', emailBase);
+      const response = await fetch(url);
+      return await response.json();
+    },
     async create(
       _c,
-      { data, meta: { is_draft, is_sign, is_letter, request_id } }
+      {
+        social = false,
+        data,
+        meta: { is_draft, is_sign, is_letter, request_id },
+      }
     ) {
       const { comment, files, ...other } = data;
 
@@ -28,7 +42,7 @@ export default {
         { indices: true, allowEmptyArrays: true }
       );
 
-      const url = new URL('save.php', base);
+      const url = new URL('save.php', social ? socialBase : base);
       const response = await fetch(url, {
         headers: {
           Accept: 'application/json',

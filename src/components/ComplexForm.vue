@@ -37,7 +37,7 @@
       </div>
     </AppModal>
     <teleport to="body">
-      <div v-if="isSubmitting" style="z-index: 99999" class="tw-fixed tw-top-0 tw-left-0 tw-right-0 tw-bottom-0 tw-bg-black tw-bg-opacity-50 tw-flex tw-justify-center tw-items-center">
+      <div v-if="loading" style="z-index: 99999" class="tw-fixed tw-top-0 tw-left-0 tw-right-0 tw-bottom-0 tw-bg-black tw-bg-opacity-50 tw-flex tw-justify-center tw-items-center">
         <div class=" tw-text-5xl tw-text-white">Идёт отправка, подождите...</div>
       </div>
     </teleport>
@@ -56,6 +56,7 @@ import ComplexFormUpload from '@/components/ComplexFormUpload';
 import ComplexFormAdditional from '@/components/ComplexFormAdditional';
 
 import flatten from 'flat';
+import useEmail from '@/compositions/useEmail';
 import { useForm } from 'vee-validate';
 import { useStore } from 'vuex';
 import { nextTick, ref } from 'vue';
@@ -63,14 +64,21 @@ import complexFormData from '@/test/complexFormData';
 
 export default {
   setup() {
+    const loading = ref(false);
     const submitModal = ref(false);
     const store = useStore();
     const initialValues = getInitVals();
 
-    const { values, validate, setErrors, resetForm, isSubmitting } = useForm();
+    const { values, validate, setErrors, resetForm, setFieldValue } = useForm();
 
     nextTick(() => {
       resetForm({ values: initialValues });
+    });
+
+    const { getEmail } = useEmail();
+    getEmail(email => {
+      const fields = ['personal_data.email', 'proxy_data.email'];
+      fields.forEach(field => setFieldValue(field, email));
     });
 
     const scrollToFirstError = (errors) => {
@@ -87,12 +95,14 @@ export default {
       is_letter = 0,
       request_id = 0
     }) => {
+
       if(is_draft === 0) {
         const { errors, valid } = await validate();
         if (!valid) return scrollToFirstError(errors);
       }
 
       const perform = async () => {
+        loading.value = true;
         const data = await store.dispatch('complexForm/create',
           { data: values, meta: { is_draft, is_sign, is_letter, request_id } }
         );
@@ -106,6 +116,8 @@ export default {
           submitModal.value = false;
           alert('Форма успешно отправлена');
         }
+
+        loading.value = false;
       };
 
       perform();
@@ -113,8 +125,8 @@ export default {
 
     return {
       onSubmit,
-      isSubmitting,
-      submitModal
+      submitModal,
+      loading
     };
   },
   components: {

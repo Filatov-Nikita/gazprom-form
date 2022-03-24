@@ -54,6 +54,7 @@ import ComplexForm2Upload from '@/components/ComplexForm2Upload';
 import ComplexFormAdditional from '@/components/ComplexFormAdditional';
 
 import flatten from 'flat';
+import useEmail from '@/compositions/useEmail';
 import { useForm } from 'vee-validate';
 import { useStore } from 'vuex';
 import { nextTick, ref } from 'vue';
@@ -66,10 +67,16 @@ export default {
     const store = useStore();
     const initialValues = getInitVals();
 
-    const { values, validate, setErrors, resetForm } = useForm();
+    const { values, validate, setErrors, resetForm, setFieldValue } = useForm();
 
     nextTick(() => {
       resetForm({ values: initialValues });
+    });
+
+    const { getEmail } = useEmail();
+    getEmail(email => {
+      const fields = ['personal_data.email', 'proxy_data.email'];
+      fields.forEach(field => setFieldValue(field, email));
     });
 
     const scrollToFirstError = (errors) => {
@@ -240,6 +247,8 @@ function getObtaining() {
 
 function getUpload() {
   return {
+    inn: null,
+    snils: null,
     identity_document_prav: null,
     identity_document_prav_igz: null,
     situational_plan: null,

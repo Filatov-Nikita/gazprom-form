@@ -48,7 +48,7 @@ export default {
       for(let file of files) {
         this.fileName.push(file.name);
       }
-      handleChange(files);
+      handleChange(files.length === 1 ? files[0] : files);
     },
   },
 };
