@@ -60,6 +60,13 @@ function getPrimary() {
     tu: '1',
     tu_number: '',
     tu_date: '',
+    add1: false,
+    add2: false,
+    add3: false,
+    add4: false,
+    add5: false,
+    add6: false,
+    add7: false,
   };
 }
 

@@ -1,16 +1,18 @@
 <template>
-  <ComplexForm />
+  <ComplexForm2 />
 </template>
 
 <script>
-import AppForm from '@/components/AppForm.vue';
-import ComplexForm from '@/components/ComplexForm.vue';
+import AppForm from '@/components/AppForm';
+import ComplexForm from '@/components/ComplexForm';
+import ComplexForm2 from '@/components/ComplexForm2';
 
 export default {
   name: 'App',
   components: {
     AppForm,
     ComplexForm,
+    ComplexForm2,
   },
 };
 </script>
@@ -35,7 +37,9 @@ export default {
     outline: none;
   }
 
-  label, input, select {
+  label,
+  input,
+  select {
     display: block;
     width: 100%;
   }

@@ -1,13 +1,10 @@
 import { serialize } from 'object-to-formdata';
 import cleaner from 'deep-cleaner';
 
-const base =
-  'http://mrg.danat.su/local/templates/gas/components/openregion/news/requests-tech-connection/openregion/news.edit/.default/ajax/';
-
-const socialBase =
-  'http://mrg.danat.su/local/templates/gas/components/openregion/news/requests-tech-connection-social/openregion/news.edit/.default/ajax/';
-
-const emailBase = 'http://mrg.danat.su/local/templates/gas/ajax/';
+const domain = process.env.NODE_ENV === 'development' ? 'http://mrg.danat.su' : window.location.origin;
+const base = `${domain}/local/templates/gas/components/openregion/news/requests-tech-connection/openregion/news.edit/.default/ajax/`;
+const socialBase = `${domain}/local/templates/gas/components/openregion/news/requests-tech-connection-social/openregion/news.edit/.default/ajax/`;
+const emailBase = `${domain}/local/templates/gas/ajax/`;
 
 export default {
   namespaced: true,

@@ -90,7 +90,7 @@ export default {
     const save = () => {
       emit('save');
       modal.value = false;
-      window.open('http://mrg.danat.su/preconditionsrequests/mchrgcalculation/0/edit/', '_blank');
+      window.open('/preconditionsrequests/mchrgcalculation/0/edit/', '_blank');
     }
 
     return {

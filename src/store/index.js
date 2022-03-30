@@ -1,6 +1,7 @@
 import { createStore } from 'vuex';
 
-const base = 'http://mrg.danat.su/local/templates/gas/ajax/';
+const domain = process.env.NODE_ENV === 'development' ? 'http://mrg.danat.su' : window.location.origin;
+const base = `${domain}/local/templates/gas/ajax/`;
 const uriAddress =
   'https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address';
 

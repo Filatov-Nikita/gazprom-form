@@ -48,6 +48,7 @@ export default {
 
     return () => {
       const input = h('input', {
+        id: props.name,
         class: 'app-input',
         type: 'date',
         onInput,

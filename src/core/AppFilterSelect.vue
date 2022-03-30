@@ -84,7 +84,7 @@ export default {
     const { value: current, handleChange: selectChange } = useField(
       computed(() => name.value + '-s'),
       '',
-      { standalone: true }
+      // { standalone: true }
     );
 
     const opts = computed(() => {

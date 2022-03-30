@@ -14,7 +14,8 @@
 </template>
 
 <script>
-import { markRaw } from '@vue/reactivity';
+import { markRaw } from 'vue';
+
 export default {
   setup() {
     const labels = markRaw({
