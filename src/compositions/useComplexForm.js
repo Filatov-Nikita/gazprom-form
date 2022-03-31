@@ -38,8 +38,11 @@ export default function (initialValues = {}, { social = false } = {}) {
       scrollToFirstError(errors);
     } else {
       submitModal.value = false;
-      console.log(data);
+      console.log('данные ответа', data);
       alert('Форма успешно отправлена');
+
+      if(social) location.href = '/preconditionsrequests/techconnectionsocial/';
+      else location.href = '/preconditionsrequests/techconnection/';
     }
   };
 

@@ -102,6 +102,7 @@ function getFio() {
 
 function getPrimary() {
   return {
+    ownership_type: '1',
     add1: false,
     add2: false,
     add3: false,

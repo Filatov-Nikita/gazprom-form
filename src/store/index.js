@@ -2,8 +2,7 @@ import { createStore } from 'vuex';
 
 const domain = process.env.NODE_ENV === 'development' ? 'http://mrg.danat.su' : window.location.origin;
 const base = `${domain}/local/templates/gas/ajax/`;
-const uriAddress =
-  'https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address';
+const uriAddress = 'https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address';
 
 function getLocations(params = {}) {
   const meta = params.meta;
@@ -11,20 +10,14 @@ function getLocations(params = {}) {
 
   if (!meta) location.region = 'Башкортостан';
   else {
-    const filtered = Object.fromEntries(
-      Object.entries(meta)
-      .filter((entry) => entry[1] !== null)
-    );
-
-    location = filtered;
+    const filtered = Object.entries(meta).filter((entry) => entry[1] !== null)
+    location = Object.fromEntries(filtered);
   }
 
   return [location];
 }
 
 export default createStore({
-  state: {},
-  mutations: {},
   actions: {
     async getCity({ dispatch }, { query }) {
       return dispatch('getAddress', {

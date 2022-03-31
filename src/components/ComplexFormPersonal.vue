@@ -10,7 +10,7 @@
         :options="typeOpts"
       />
       <template v-if="type === '2'">
-        <AppInput name="personal_data.organization_inn" rules="required|numeric" label="ИНН" />
+        <AppInput name="personal_data.organization_inn" rules="required|numeric|length:10" label="ИНН" v-maska="'##########'" />
         <AppInput name="personal_data.kpp" rules="required|numeric" label="КПП" />
         <AppInput name="personal_data.ogrn" label="ОГРН" />
         <AppInput name="personal_data.organization_brief_name" rules="required" label="Краткое наименование организации" />
@@ -28,7 +28,7 @@
       <template v-else>
         <ComplexFormPtFio path="personal_data"/>
         <ComplexFormPtPassport path="personal_data"/>
-        <AppInput name="personal_data.inn" rules="required|numeric" label="ИНН" />
+        <AppInput name="personal_data.inn" rules="required|numeric|length:12" label="ИНН" v-maska="'############'"/>
         <ComplexFormPtAddrress path="personal_data.mailing_address" title="Почтовый адрес"/>
         <ComplexFormPtContacts path="personal_data"/>
         <template v-if="type === '3'">

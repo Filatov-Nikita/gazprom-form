@@ -4,8 +4,8 @@
     <AppFieldset>
       <ComplexFormPtFio path="personal_data"/>
       <ComplexFormPtPassport path="personal_data"/>
-      <AppInput name="personal_data.inn" rules="required|numeric" label="ИНН" />
-      <AppInput name="personal_data.soc" rules="required" label="СНИЛС" />
+      <AppInput name="personal_data.inn" rules="required|numeric|length:12" label="ИНН" v-maska="'############'" />
+      <AppInput name="personal_data.soc" rules="required" label="СНИЛС" v-maska="'###-###-###-##'"/>
       <ComplexFormPtAddrress path="personal_data.mailing_address" title="Почтовый адрес"/>
       <ComplexFormPtContacts path="personal_data"/>
     </AppFieldset>

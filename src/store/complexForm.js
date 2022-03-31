@@ -14,14 +14,14 @@ export default {
       const response = await fetch(url);
       return await response.json();
     },
-    async create(
-      _c,
-      {
+    async create(_c, opts) {
+
+      const {
         social = false,
         data,
         meta: { is_draft, is_sign, is_letter, request_id },
-      }
-    ) {
+      } = opts;
+
       const { comment, files, ...other } = data;
 
       const cleanedData = cleaner(other);
@@ -40,6 +40,7 @@ export default {
       );
 
       const url = new URL('save.php', social ? socialBase : base);
+
       const response = await fetch(url, {
         headers: {
           Accept: 'application/json',
@@ -48,9 +49,7 @@ export default {
         body: formData,
       });
 
-      const responseData = await response.json();
-
-      return responseData;
+      return await response.json();
     },
   },
 };
