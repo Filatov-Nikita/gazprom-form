@@ -4,11 +4,15 @@ export default function () {
   const store = useStore();
 
   const getEmail = async (cb = () => {}) => {
-    const data = await store.dispatch('complexForm/getEmail');
-    if (!data?.email)
+    try {
+      const data = await store.dispatch('complexForm/getEmail');
+      if (!data?.email) throw 'Email is invalid';
+      else {
+        cb(data.email);
+      }
+    } catch(e) {
+      console.log(e);
       alert('не удалось загрузить email пользователя. Впишите email вручную');
-    else {
-      cb(data.email);
     }
   };
 
