@@ -11,8 +11,8 @@
       />
       <template v-if="type === '2'">
         <AppInput name="personal_data.organization_inn" rules="required|numeric|length:10" label="ИНН" v-maska="'##########'" />
-        <AppInput name="personal_data.kpp" rules="required|numeric" label="КПП" />
-        <AppInput name="personal_data.ogrn" label="ОГРН" />
+        <AppInput name="personal_data.kpp" rules="required|numeric" label="КПП" v-maska="'#########'" />
+        <AppInput name="personal_data.ogrn" label="ОГРН" v-maska="'#############'" />
         <AppInput name="personal_data.organization_brief_name" rules="required" label="Краткое наименование организации" />
         <AppInput name="personal_data.organization_full_name" rules="required" label="Полное наименование организации" />
         <ComplexFormPtAddrress path="personal_data.mailing_address" title="Почтовый адрес"/>
@@ -23,7 +23,7 @@
           label="Характер потребления газа"
           :options="gasPotrebOpts"
         />
-        <AppInput name="personal_data.economic_activity_type" label="Вид экономической деятельности (Код ОКВЭД)" />
+        <AppInput name="personal_data.economic_activity_type" label="Вид экономической деятельности (Код ОКВЭД)" v-maska="'##.##.##.##'" />
       </template>
       <template v-else>
         <ComplexFormPtFio path="personal_data"/>
@@ -38,7 +38,7 @@
             label="Характер потребления газа"
             :options="gasPotrebOpts"
           />
-          <AppInput name="personal_data.economic_activity_type" label="Вид экономической деятельности (Код ОКВЭД)" />
+          <AppInput name="personal_data.economic_activity_type" label="Вид экономической деятельности (Код ОКВЭД)" v-maska="'##.##.##.##'" />
         </template>
       </template>
 
