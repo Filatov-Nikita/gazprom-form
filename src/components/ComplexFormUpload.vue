@@ -4,39 +4,39 @@
     <AppFieldset>
       <AppFormCard>
         <AppFieldset>
-          <AppFile :accept="$accept" name="documents_upload.identity_document" rules="required" :label="labels.identity_document"/>
-          <AppFile :accept="$accept" name="documents_upload.registration_inn_kpp_certificate" rules="required" :label="labels.registration_inn_kpp_certificate"/>
-          <AppFile :accept="$accept" name="documents_upload.land_documents" rules="required" :label="labels.land_documents"/>
-          <AppFile :accept="$accept" name="documents_upload.situational_plan" rules="required" :label="labels.situational_plan"/>
-          <AppFile :accept="$accept" name="documents_upload.topographic_map" :label="labels.topographic_map"/>
+          <AppFile :accept="$accept" multiple name="documents_upload.identity_document" rules="required" :label="labels.identity_document"/>
+          <AppFile :accept="$accept" multiple name="documents_upload.registration_inn_kpp_certificate" rules="required" :label="labels.registration_inn_kpp_certificate"/>
+          <AppFile :accept="$accept" multiple name="documents_upload.land_documents" rules="required" :label="labels.land_documents"/>
+          <AppFile :accept="$accept" multiple name="documents_upload.situational_plan" rules="required" :label="labels.situational_plan"/>
+          <AppFile :accept="$accept" multiple name="documents_upload.topographic_map" :label="labels.topographic_map"/>
         </AppFieldset>
       </AppFormCard>
       <AppFormCard v-if="type === '2'">
         <AppFormTitle level="3">Регистрационные документы юридического лица</AppFormTitle>
         <AppFieldset>
-          <AppFile :accept="$accept" name="documents_upload.regulations_copy" rules="required" :label="labels.regulations_copy"/>
-          <AppFile :accept="$accept" name="documents_upload.ogrn" rules="required" :label="labels.ogrn"/>
-          <AppFile :accept="$accept" name="documents_upload.information_letter" rules="required" :label="labels.information_letter"/>
-          <AppFile :accept="$accept" name="documents_upload.signatures_sample" rules="required" :label="labels.signatures_sample"/>
-          <AppFile :accept="$accept" name="documents_upload.contract_signing_person" rules="required" :label="labels.contract_signing_person"/>
-          <AppFile :accept="$accept" name="documents_upload.sign_documents_right" rules="required" :label="labels.sign_documents_right"/>
+          <AppFile :accept="$accept" multiple name="documents_upload.regulations_copy" rules="required" :label="labels.regulations_copy"/>
+          <AppFile :accept="$accept" multiple name="documents_upload.ogrn" rules="required" :label="labels.ogrn"/>
+          <AppFile :accept="$accept" multiple name="documents_upload.information_letter" rules="required" :label="labels.information_letter"/>
+          <AppFile :accept="$accept" multiple name="documents_upload.signatures_sample" rules="required" :label="labels.signatures_sample"/>
+          <AppFile :accept="$accept" multiple name="documents_upload.contract_signing_person" rules="required" :label="labels.contract_signing_person"/>
+          <AppFile :accept="$accept" multiple name="documents_upload.sign_documents_right" rules="required" :label="labels.sign_documents_right"/>
         </AppFieldset>
       </AppFormCard>
       <AppFormCard>
         <AppFieldset>
-          <AppFile :accept="$accept" v-if="type === '3'" name="documents_upload.ogrnip" :label="labels.ogrnip"/>
-          <AppFile :accept="$accept" v-if="tu === '2'" name="documents_upload.gas_transportation_organization_conclusion" :label="labels.gas_transportation_organization_conclusion"/>
-          <AppFile :accept="$accept" v-if="mchrg === '2'" name="documents_upload.mchrg_calculation" :label="labels.mchrg_calculation"/>
-          <AppFile :accept="$accept" v-if="proxy === '2'" name="documents_upload.proxy" :label="labels.proxy"/>
-          <AppFile :accept="$accept" v-if="profit === '2'" name="documents_upload.general_meeting_resolution" :label="labels.general_meeting_resolution"/>
-          <AppFile :accept="$accept" v-if="commissioning === '1'" name="documents_upload.capital_construction_object_ownership" :label="labels.capital_construction_object_ownership"/>
-          <AppFile :accept="$accept" v-if="network === '2'" name="documents_upload.main_subscriber_consent" rules="required" :label="labels.main_subscriber_consent"/>
-          <AppFile :accept="$accept" v-if="infrastucture === '2'" name="documents_upload.infrastructure_facilities_contract" rules="required" :label="labels.infrastructure_facilities_contract"/>
-          <AppFile :accept="$accept" v-if="connection === '2'" name="documents_upload.territory_planning_documentation" rules="required" :label="labels.territory_planning_documentation"/>
+          <AppFile :accept="$accept" multiple v-if="type === '3'" name="documents_upload.ogrnip" :label="labels.ogrnip"/>
+          <AppFile :accept="$accept" multiple v-if="tu === '2'" name="documents_upload.gas_transportation_organization_conclusion" :label="labels.gas_transportation_organization_conclusion"/>
+          <AppFile :accept="$accept" multiple v-if="mchrg === '2'" name="documents_upload.mchrg_calculation" :label="labels.mchrg_calculation"/>
+          <AppFile :accept="$accept" multiple v-if="proxy === '2'" name="documents_upload.proxy" :label="labels.proxy"/>
+          <AppFile :accept="$accept" multiple v-if="profit === '2'" name="documents_upload.general_meeting_resolution" :label="labels.general_meeting_resolution"/>
+          <AppFile :accept="$accept" multiple v-if="commissioning === '1'" name="documents_upload.capital_construction_object_ownership" :label="labels.capital_construction_object_ownership"/>
+          <AppFile :accept="$accept" multiple v-if="network === '2'" name="documents_upload.main_subscriber_consent" rules="required" :label="labels.main_subscriber_consent"/>
+          <AppFile :accept="$accept" multiple v-if="infrastucture === '2'" name="documents_upload.infrastructure_facilities_contract" rules="required" :label="labels.infrastructure_facilities_contract"/>
+          <AppFile :accept="$accept" multiple v-if="connection === '2'" name="documents_upload.territory_planning_documentation" rules="required" :label="labels.territory_planning_documentation"/>
           <template v-if="rightPower === '2'">
-            <AppFile :accept="$accept" name="documents_upload.right_to_use_power" rules="required" :label="labels.right_to_use_power"/>
-            <AppFile :accept="$accept" name="documents_upload.certified_right_to_use_power" rules="required" :label="labels.certified_right_to_use_power"/>
-            <AppFile :accept="$accept" name="documents_upload.gas_consumption_reduction_document" :label="labels.gas_consumption_reduction_document"/>
+            <AppFile :accept="$accept" multiple name="documents_upload.right_to_use_power" rules="required" :label="labels.right_to_use_power"/>
+            <AppFile :accept="$accept" multiple name="documents_upload.certified_right_to_use_power" rules="required" :label="labels.certified_right_to_use_power"/>
+            <AppFile :accept="$accept" multiple name="documents_upload.gas_consumption_reduction_document" :label="labels.gas_consumption_reduction_document"/>
           </template>
         </AppFieldset>
       </AppFormCard>

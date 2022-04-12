@@ -110,6 +110,7 @@ function getPrimary() {
     add5: false,
     add6: false,
     add7: false,
+    uploadedFiles: null
   };
 }
 

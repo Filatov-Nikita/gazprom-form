@@ -5,14 +5,25 @@ const domain = process.env.NODE_ENV === 'development' ? 'http://mrg.danat.su' : 
 const base = `${domain}/local/templates/gas/components/openregion/news/requests-tech-connection/openregion/news.edit/.default/ajax/`;
 const socialBase = `${domain}/local/templates/gas/components/openregion/news/requests-tech-connection-social/openregion/news.edit/.default/ajax/`;
 const emailBase = `${domain}/local/templates/gas/ajax/`;
+const Authorization = '50e733f3d0cc869612470dfa7feb98e2';
 
 export default {
   namespaced: true,
   actions: {
+    async showFiles(_c, { fileId }) {
+      const url = new URL(`api/v1.0.0/files/${fileId}`, domain);
+      const response = await fetch(url, { headers: { Authorization } });
+      return response.json();
+    },
+    async show(_c, { id }) {
+      const url = new URL(`api/v1.0.0/requests/${id}`, domain);
+      const response = await fetch(url, { headers: { Authorization } });
+      return await response.json();
+    },
     async getEmail() {
       const url = new URL('user_mail.php', emailBase);
       const response = await fetch(url);
-      return await response.json();
+      return response.json();
     },
     async create(_c, opts) {
 
@@ -49,7 +60,7 @@ export default {
         body: formData,
       });
 
-      return await response.json();
+      return response.json();
     },
   },
 };

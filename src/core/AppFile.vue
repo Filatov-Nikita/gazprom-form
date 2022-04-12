@@ -20,7 +20,7 @@
   </div>
 </template>
 <script>
-import { Field } from 'vee-validate';
+import { Field, useFieldValue } from 'vee-validate';
 import useRules from '@/compositions/useRules';
 import { toRef, ref } from '@vue/reactivity';
 
@@ -34,23 +34,39 @@ export default {
     const rules = toRef(props, 'rules');
     const { hasRequiredRule } = useRules(rules);
 
+    const value = useFieldValue(props.name);
+
     return {
       hasRequiredRule,
-      fileName
+      fileName,
+      value
     };
   },
   methods: {
     onChange(e, handleChange) {
       const files = e.target.files;
       if(!files || files.length <= 0) return;
+      handleChange(files.length === 1 ? files[0] : files);
+    },
+    parseFiles(files) {
+      if(!files) return;
+
+      if(files instanceof File) return this.fileName = [files.name];
 
       this.fileName = [];
       for(let file of files) {
         this.fileName.push(file.name);
       }
-      handleChange(files.length === 1 ? files[0] : files);
-    },
+    }
   },
+  watch: {
+    value: {
+      handler(files) {
+        this.parseFiles(files);
+      },
+      immediate: true
+    }
+  }
 };
 </script>
 
