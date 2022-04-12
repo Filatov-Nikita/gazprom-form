@@ -20,7 +20,7 @@ export default {
     const { hasRequiredRule } = useRules(rules);
 
     function naitiveFormat(value) {
-      if (!value) return '';
+      if (!value || typeof value !== 'string') return '';
       const match = value.match(localePattern);
       const groups = match?.groups || {};
       const { day = '', month = '', year = '' } = groups;

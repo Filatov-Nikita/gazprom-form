@@ -34,7 +34,6 @@
         ref="flatRef"
         :disabled="!building"
         :name="`${path}.flat`"
-        rules="required"
         label="Квартира"
       />
     </AppFieldset>
