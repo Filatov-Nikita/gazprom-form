@@ -2,9 +2,9 @@
   <AppFormSection>
     <AppFormTitle class="tw-mb-2">Способ получения уведомлений</AppFormTitle>
     <AppFieldset class="tw-mb-4">
-      <AppCheck name="notifications_receiving.sms_checkbox" label="СМС уведомления" :value="true" />
+      <AppCheck name="notifications_receiving.sms_checkbox" label="СМС уведомления" :value="'true'" />
       <AppInput
-        v-if="sms"
+        v-if="sms === 'true'"
         type="tel"
         name="notifications_receiving.sms"
         label="Номер телефона"
@@ -15,10 +15,10 @@
       <AppCheck
         name="notifications_receiving.email_checkbox"
         label="Электронная почта"
-        :value="true"
+        :value="'true'"
       />
       <AppInput
-        v-if="email"
+        v-if="email === 'true'"
         type="email"
         name="notifications_receiving.email"
         label="Адрес электронной почты"
