@@ -1,8 +1,9 @@
 import flatten from 'flat';
 import useEmail from '@/compositions/useEmail';
+import usePreloadForm from '@/compositions/usePreloadForm';
 import { useForm } from 'vee-validate';
 import { useStore } from 'vuex';
-import { nextTick, ref } from 'vue';
+import { nextTick, ref, provide } from 'vue';
 
 function scrollToFirstError(errors) {
   const errList = Object.keys(errors);
@@ -19,15 +20,25 @@ export default function (initialValues = {}, { social = false } = {}) {
   const submitModal = ref(false);
   const store = useStore();
 
-  const { values, validate, setErrors, resetForm, setFieldValue } = useForm();
+  const { values, validate, setErrors, resetForm, setFieldValue, setValues } = useForm();
 
   nextTick(() => resetForm({ values: initialValues }));
+
+  usePreloadForm(setValues);
+
+  provide('pasteAddress', () => {
+    const { city, street, house, flat } = values.personal_data.mailing_address;
+    setFieldValue('documents_obtaining.mailing_address.city', city);
+    setFieldValue('documents_obtaining.mailing_address.street', street);
+    setFieldValue('documents_obtaining.mailing_address.house', house);
+    setFieldValue('documents_obtaining.mailing_address.flat', flat);
+  });
 
   const { getEmail } = useEmail();
   const handleEmail = (email) => {
     setFieldValue('personal_data.email', email);
     setFieldValue('proxy_data.email', email);
-  };
+  }
 
   getEmail(handleEmail);
 
