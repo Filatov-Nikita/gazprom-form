@@ -43,7 +43,7 @@ export default {
 
     const showBtn = computed(() => {
       const { city, street, house } = address.value;
-      return city && street && house;
+      return city && street && house && type.value === '1';
     });
 
     const pasteAddress = inject('pasteAddress');
