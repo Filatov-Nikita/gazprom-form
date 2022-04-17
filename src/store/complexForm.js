@@ -28,6 +28,7 @@ export default {
     async create(_c, opts) {
 
       const {
+        edit = false,
         social = false,
         data,
         meta: { is_draft, is_sign, is_letter, request_id },
@@ -37,20 +38,24 @@ export default {
 
       const cleanedData = cleaner(other);
 
+      const json = {
+        comment,
+        files,
+        request_id,
+        is_draft,
+        is_sign,
+        is_letter,
+        data: cleanedData,
+      };
+
+      if(edit) json.id = opts.id;
+
       const formData = serialize(
-        {
-          comment,
-          files,
-          request_id,
-          is_draft,
-          is_sign,
-          is_letter,
-          data: cleanedData,
-        },
+        json,
         { indices: true, allowEmptyArrays: true }
       );
 
-      const url = new URL('save.php', social ? socialBase : base);
+      const url = new URL(edit ? 'edit.php' : 'save.php', social ? socialBase : base);
 
       const response = await fetch(url, {
         headers: {

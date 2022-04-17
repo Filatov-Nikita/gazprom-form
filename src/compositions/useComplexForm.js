@@ -24,7 +24,7 @@ export default function (initialValues = {}, { social = false } = {}) {
 
   nextTick(() => resetForm({ values: initialValues }));
 
-  usePreloadForm(setValues);
+  const id = usePreloadForm(setValues);
 
   provide('pasteAddress', () => {
     const { city, street, house, flat } = values.personal_data.mailing_address;
@@ -52,8 +52,8 @@ export default function (initialValues = {}, { social = false } = {}) {
       console.log('данные ответа', data);
       alert('Форма успешно отправлена');
 
-      if(social) location.href = '/preconditionsrequests/techconnectionsocial/';
-      else location.href = '/preconditionsrequests/techconnection/';
+      // if(social) location.href = '/preconditionsrequests/techconnectionsocial/';
+      // else location.href = '/preconditionsrequests/techconnection/';
     }
   };
 
@@ -70,6 +70,8 @@ export default function (initialValues = {}, { social = false } = {}) {
     loading.value = true;
 
     const data = await store.dispatch('complexForm/create', {
+      id,
+      edit: id === undefined ? false : true,
       social,
       data: values,
       meta: { is_draft, is_sign, is_letter, request_id },

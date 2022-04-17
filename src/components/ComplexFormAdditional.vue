@@ -2,13 +2,13 @@
   <AppFormSection>
     <AppFormTitle>Выполнить дополнительные мероприятия:</AppFormTitle>
     <AppFieldset>
-      <AppCheck :label="labels.add1" name="primary_information.add1" :value="true"/>
-      <AppCheck :label="labels.add2" name="primary_information.add2" :value="true"/>
-      <AppCheck :label="labels.add4" name="primary_information.add4" :value="true"/>
-      <AppCheck :label="labels.add5" name="primary_information.add5" :value="true"/>
-      <AppCheck :label="labels.add6" name="primary_information.add6" :value="true"/>
-      <AppCheck :label="labels.add3" name="primary_information.add3" :value="true"/>
-      <AppCheck :label="labels.add7" name="primary_information.add7" :value="true"/>
+      <AppCheck :label="labels.add1" name="primary_information.add1" :value="'true'"/>
+      <AppCheck :label="labels.add2" name="primary_information.add2" :value="'true'"/>
+      <AppCheck :label="labels.add4" name="primary_information.add4" :value="'true'"/>
+      <AppCheck :label="labels.add5" name="primary_information.add5" :value="'true'"/>
+      <AppCheck :label="labels.add6" name="primary_information.add6" :value="'true'"/>
+      <AppCheck :label="labels.add3" name="primary_information.add3" :value="'true'"/>
+      <AppCheck :label="labels.add7" name="primary_information.add7" :value="'true'"/>
     </AppFieldset>
   </AppFormSection>
 </template>

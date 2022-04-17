@@ -17,6 +17,7 @@ export function isHoliday(weekday) {
 }
 
 export function getPrettyDate(date) {
+  if(!date) return date;
   const format = formatDateVal;
   const day = format(date.getDate());
   const month = format(date.getMonth() + 1);

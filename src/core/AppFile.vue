@@ -28,6 +28,10 @@ export default {
   inheritAttrs: false,
   props: {
     ...Field.props,
+    filename: {
+      default: undefined,
+      type: [Array, String]
+    }
   },
   setup(props) {
     const fileName = ref([]);
@@ -65,8 +69,16 @@ export default {
         this.parseFiles(files);
       },
       immediate: true
+    },
+    filename(val) {
+      if(!val) return;
+      if(Array.isArray(val)) {
+        this.fileName = val;
+      } else {
+        this.fileName = [val];
+      }
     }
-  }
+  },
 };
 </script>
 

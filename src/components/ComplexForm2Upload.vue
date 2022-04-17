@@ -4,13 +4,13 @@
     <AppFieldset>
       <AppFormCard>
         <AppFieldset>
-          <AppFile :accept="$accept" multiple name="documents_upload.inn" rules="required" label="ИНН"/>
-          <AppFile :accept="$accept" multiple name="documents_upload.snils" rules="required" label="СНИЛС"/>
-          <AppFile :accept="$accept" multiple name="documents_upload.identity_document_prav" rules="required" label="Копия правоустанавливающего документа на земельный участок, на котором располагается принадлежащий заявителю объект индивидуального жилищного строительства."/>
-          <AppFile :accept="$accept" multiple name="documents_upload.identity_document_prav_igz" rules="required" label="Копия документа, подтверждающего право собственности на объект индивидуального жилищного строительства."/>
-          <AppFile :accept="$accept" multiple name="documents_upload.land_documents" label="Расчет максимального часового расхода газа (не прилагается, если планируемый максимальный часовой расход газа не более 7 куб.метров в час"/>
-          <AppFile :accept="$accept" multiple name="documents_upload.situational_plan" rules="required" label="Ситуационный план"/>
-          <AppFile :accept="$accept" multiple v-if="proxy === '2'" name="documents_upload.proxy" label="Доверенность или иные документы, подтверждающие полномочия представителя заявителя"/>
+          <AppFile :accept="$accept" v-bind="fileAttrs('inn', 'ИНН')" />
+          <AppFile :accept="$accept" v-bind="fileAttrs('snils', 'СНИЛС')" />
+          <AppFile :accept="$accept" v-bind="fileAttrs('identity_document_prav', pravLabel)" />
+          <AppFile :accept="$accept" v-bind="fileAttrs('identity_document_prav_igz', pravIgzLabel)" />
+          <AppFile :accept="$accept" v-bind="fileAttrs('land_documents', landDocsLabel, true)" />
+          <AppFile :accept="$accept" v-bind="fileAttrs('situational_plan', 'Ситуационный план')" />
+          <AppFile :accept="$accept" v-if="proxy === '2'" v-bind="fileAttrs('proxy', proxyLabel, true)" />
         </AppFieldset>
       </AppFormCard>
     </AppFieldset>
@@ -22,9 +22,26 @@ import { useFieldValue } from 'vee-validate';
 export default {
   setup() {
     const proxy = useFieldValue('proxy_data.proxy');
+    const filename = useFieldValue('uploadedFiles.docs');
+
+    const fileAttrs = (key, label, optional = false) => {
+      return {
+        rules: (optional || filename.value?.[key]) ? '' : 'required',
+        filename: filename.value?.[key],
+        name: `documents_upload.${key}`,
+        multiple: true,
+        label
+      }
+    }
 
     return {
       proxy,
+      filename,
+      fileAttrs,
+      proxyLabel: 'Доверенность или иные документы, подтверждающие полномочия представителя заявителя',
+      landDocsLabel: 'Расчет максимального часового расхода газа (не прилагается, если планируемый максимальный часовой расход газа не более 7 куб.метров в час',
+      pravLabel: 'Копия правоустанавливающего документа на земельный участок, на котором располагается принадлежащий заявителю объект индивидуального жилищного строительства.',
+      pravIgzLabel: 'Копия документа, подтверждающего право собственности на объект индивидуального жилищного строительства.'
     }
   }
 };

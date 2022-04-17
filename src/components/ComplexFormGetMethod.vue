@@ -21,7 +21,7 @@
         title="Почтовый адрес"
       />
       <AppInput type="textarea" name="comment" label="Комментарий:" />
-      <AppFile name="files" label="Вложения:" multiple />
+      <AppFile :filename="files" name="files" label="Вложения:" multiple />
     </AppFieldset>
   </AppFormSection>
 </template>
@@ -35,6 +35,7 @@ export default {
   setup() {
     const type = useFieldValue('documents_obtaining.obtaining_method');
     const address = useFieldValue('personal_data.mailing_address');
+    const files = useFieldValue('uploadedFiles.files');
 
     const typeOpts = markRaw([
       { label: 'По почте', value: '1' },
@@ -52,6 +53,7 @@ export default {
       type,
       typeOpts,
       showBtn,
+      files,
       pasteAdreess: () => pasteAddress()
     };
   },
