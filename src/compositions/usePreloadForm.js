@@ -25,7 +25,8 @@ export default function (setValues) {
   }
 
   async function upload(fileList) {
-    const names = await Promise.all(fileList.map(getFile));
+    const idFilter = id => id !== 0;
+    const names = await Promise.all(fileList.filter(idFilter).map(getFile));
     return names;
   }
 
