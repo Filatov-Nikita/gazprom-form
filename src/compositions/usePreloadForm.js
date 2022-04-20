@@ -20,14 +20,19 @@ export default function (setValues) {
   }
 
   async function getFile(fileId) {
-    const { file } = await store.dispatch('complexForm/showFiles', { fileId });
-    return getName(file.src);
+    try {
+      const { file } = await store.dispatch('complexForm/showFiles', { fileId });
+      return getName(file.src);
+    } catch(e) {
+      console.log(e);
+      return undefined;
+    }
   }
 
   async function upload(fileList) {
     const idFilter = id => id !== 0;
     const names = await Promise.all(fileList.filter(idFilter).map(getFile));
-    return names;
+    return names.filter(name => name !== undefined);
   }
 
   async function uploadDocuments(documents) {
@@ -59,8 +64,37 @@ export default function (setValues) {
   }
 
   function converToDate(timestamp) {
-    if(+timestamp === -1) return '';
     return new Date(timestamp * 1000);
+  }
+
+  function displayDate(timestamp) {
+    if(!timestamp) return '';
+    timestamp = +timestamp;
+    if(isNaN(timestamp) || timestamp === -1) return '';
+    return getPrettyDate(converToDate(timestamp)).value
+  }
+
+  function replaceDates(formParts) {
+    const { primary_information, object_data } = formParts;
+
+    if(primary_information.tu_date) {
+      primary_information.tu_date = displayDate(primary_information.tu_date)
+    }
+
+    if(object_data.commissioning_date) {
+      object_data.commissioning_date = displayDate(object_data.commissioning_date);
+    }
+
+    if(object_data.approximate_date) {
+      object_data.approximate_date = displayDate(object_data.approximate_date);
+    }
+
+    if(object_data.object_stages && Array.isArray(object_data.object_stages)) {
+      object_data.object_stages = object_data.object_stages.map(({ design_time, input_date }) => ({
+        design_time: displayDate(design_time),
+        input_date: displayDate(input_date)
+      }))
+    }
   }
 
   async function show() {
@@ -73,23 +107,28 @@ export default function (setValues) {
       const { docNames, docMocks } = await uploadDocuments(documents);
       const attachedNames = await uploadAttached(files);
 
-      let document_date_issue = data.personal_data.document_date_issue;
-      document_date_issue = getPrettyDate(converToDate(document_date_issue)).value;
-      let document_date_issue2 = data.proxy_data.document_date_issue;
-      document_date_issue2 = getPrettyDate(converToDate(document_date_issue2)).value;
+      let formParts = {
+        primary_information: { ...data.primary_information },
+        object_data: { ...data.object_data },
+      };
+
+      replaceDates(formParts);
 
       const values = {
         ...data,
         personal_data: {
           ...data.personal_data,
-          document_date_issue
+          document_date_issue: displayDate(data.personal_data.document_date_issue)
         },
         proxy_data: {
           ...data.proxy_data,
-          document_date_issue: document_date_issue2
+          document_date_issue: displayDate(data.proxy_data.document_date_issue),
+          proxy_date: displayDate(data.proxy_data.proxy_date),
+          proxy_end: displayDate(data.proxy_data.proxy_end),
         },
+        object_data: formParts.object_data,
         documents_upload: { ...data.documents_upload, ...docMocks },
-        primary_information: { ...data.primary_information},
+        primary_information: formParts.primary_information,
         comment,
         files: null,
         uploadedFiles: { docs: docNames, files: attachedNames }
