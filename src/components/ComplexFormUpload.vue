@@ -49,7 +49,7 @@ import { useFieldValue } from 'vee-validate';
 import { markRaw } from 'vue';
 export default {
   setup() {
-    const filename = useFieldValue('uploadedFiles');
+    const filename = useFieldValue('uploadedFiles.docs');
     const rightPower = useFieldValue('object_data.right_to_use_power');
     const connection = useFieldValue('object_data.connection_integrated_development');
     const infrastucture = useFieldValue('object_data.connection_using_infrastructure');
@@ -109,7 +109,6 @@ export default {
       mchrg,
       tu,
       type,
-      filename
     }
   }
 };

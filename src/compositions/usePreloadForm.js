@@ -40,7 +40,7 @@ export default function (setValues) {
     const uploadedDocs = await Promise.all(
       filledDocs.map(async ([key, fileList]) => {
         const names = await upload(fileList);
-       return [key, names];
+        return [key, names];
       })
     );
 
