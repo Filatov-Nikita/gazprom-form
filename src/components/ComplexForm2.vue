@@ -14,6 +14,7 @@
     <AppModal v-model="submitModal">
       <ComplexFormModal @submit="onSubmit" @hideModal="submitModal = false" />
     </AppModal>
+    <ComplexFormLetter />
     <AppLoading :showing="loading" />
   </ComplexFormLayout>
 </template>
@@ -44,7 +45,8 @@ export default {
     ComplexFormAdditional: require('@/components/ComplexFormAdditional').default,
     ComplexFormLayout: require('@/components/ComplexFormLayout').default,
     ComplexFormToolbar: require('@/components/ComplexFormToolbar').default,
-    ComplexFormModal: require('@/components/ComplexFormModal').default
+    ComplexFormModal: require('@/components/ComplexFormModal').default,
+    ComplexFormLetter: require('@/components/ComplexFormLetter').default
   },
 };
 

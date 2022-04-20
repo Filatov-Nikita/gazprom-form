@@ -10,6 +10,12 @@ const Authorization = '50e733f3d0cc869612470dfa7feb98e2';
 export default {
   namespaced: true,
   actions: {
+    async getLetter(_c, { id }) {
+      const url = new URL(`get_letter.php`, base);
+      url.searchParams.append('request_id', id);
+      const response = await fetch(url, { headers: { Authorization } });
+      return response.json();
+    },
     async showFiles(_c, { fileId }) {
       const url = new URL(`api/v1.0.0/files/${fileId}`, domain);
       const response = await fetch(url, { headers: { Authorization } });
