@@ -30,9 +30,9 @@
           <AppFile :accept="$accept" v-if="proxy === '2'" v-bind="fileAttrs('proxy', true)" />
           <AppFile :accept="$accept" v-if="profit === '2'" v-bind="fileAttrs('general_meeting_resolution', true)" />
           <AppFile :accept="$accept" v-if="commissioning === '1'" v-bind="fileAttrs('capital_construction_object_ownership', true)" />
-          <AppFile :accept="$accept" v-bind="fileAttrs('main_subscriber_consent')" />
-          <AppFile :accept="$accept" v-bind="fileAttrs('infrastructure_facilities_contract')" />
-          <AppFile :accept="$accept" v-bind="fileAttrs('territory_planning_documentation')" />
+          <AppFile :accept="$accept" v-bind="fileAttrs('main_subscriber_consent', true)" />
+          <AppFile :accept="$accept" v-bind="fileAttrs('infrastructure_facilities_contract', true)" />
+          <AppFile :accept="$accept" v-bind="fileAttrs('territory_planning_documentation', true)" />
           <template v-if="rightPower === '2'">
             <AppFile :accept="$accept" v-bind="fileAttrs('right_to_use_power')" />
             <AppFile :accept="$accept" v-bind="fileAttrs('certified_right_to_use_power')" />

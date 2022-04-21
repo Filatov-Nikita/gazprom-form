@@ -163,7 +163,7 @@ function getUpload() {
     identity_document_prav: null,
     identity_document_prav_igz: null,
     situational_plan: null,
-    land_documents: null,
+    mchrg_calculation: null,
     proxy: null,
   };
 }

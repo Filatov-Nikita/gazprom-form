@@ -8,7 +8,7 @@
           <AppFile :accept="$accept" v-bind="fileAttrs('snils', 'СНИЛС')" />
           <AppFile :accept="$accept" v-bind="fileAttrs('identity_document_prav', pravLabel)" />
           <AppFile :accept="$accept" v-bind="fileAttrs('identity_document_prav_igz', pravIgzLabel)" />
-          <AppFile :accept="$accept" v-bind="fileAttrs('land_documents', landDocsLabel, true)" />
+          <AppFile :accept="$accept" v-bind="fileAttrs('mchrg_calculation', landDocsLabel, true)" />
           <AppFile :accept="$accept" v-bind="fileAttrs('situational_plan', 'Ситуационный план')" />
           <AppFile :accept="$accept" v-if="proxy === '2'" v-bind="fileAttrs('proxy', proxyLabel, true)" />
         </AppFieldset>

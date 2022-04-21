@@ -112,7 +112,7 @@ function getUpload() {
     identity_document_prav: blob,
     identity_document_prav_igz: blob,
     situational_plan: blob,
-    land_documents: blob,
+    mchrg_calculation: blob,
     proxy: blob,
   };
 }
