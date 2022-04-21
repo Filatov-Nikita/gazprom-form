@@ -47,12 +47,11 @@ export default function (initialValues = {}, { social = false } = {}) {
       console.log('данные ответа', data);
       alert('Форма успешно отправлена');
 
-      if(+data?.post?.is_letter === 1) {
-        location.href = `/preconditionsrequests/techconnection/20353/edit/?id=${data.id}&letter=true`
-        return;
-      }
-      if(social) location.href = '/preconditionsrequests/techconnectionsocial/';
-      else location.href = '/preconditionsrequests/techconnection/';
+      let postfix = '';
+      if(+data?.post?.is_letter === 1) postfix = `${data.id}/edit/?id=${data.id}&letter=true`;
+
+      if(social) location.href = '/preconditionsrequests/techconnectionsocial/' + postfix;
+      else location.href = '/preconditionsrequests/techconnection/' + postfix;
     }
   };
 
