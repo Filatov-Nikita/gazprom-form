@@ -37,7 +37,7 @@ export default function (initialValues = {}, { social = false } = {}) {
 
   getEmail(handleEmail);
 
-  const handleResponse = (data, { is_letter, id }) => {
+  const handleResponse = (data) => {
     if (!Array.isArray(data.errors)) {
       const errors = flatten(data.errors);
       setErrors(errors);
@@ -47,8 +47,8 @@ export default function (initialValues = {}, { social = false } = {}) {
       console.log('данные ответа', data);
       alert('Форма успешно отправлена');
 
-      if(is_letter === 1) {
-        location.href = `/preconditionsrequests/techconnection/20353/edit/?id=${id}&letter=true`
+      if(+data?.post?.is_letter === 1) {
+        location.href = `/preconditionsrequests/techconnection/20353/edit/?id=${data.id}&letter=true`
         return;
       }
       if(social) location.href = '/preconditionsrequests/techconnectionsocial/';
@@ -76,7 +76,7 @@ export default function (initialValues = {}, { social = false } = {}) {
       meta: { is_draft, is_sign, is_letter, request_id },
     });
 
-    handleResponse(data, { is_letter, id });
+    handleResponse(data);
 
     loading.value = false;
   };
