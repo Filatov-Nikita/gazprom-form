@@ -92,7 +92,7 @@ function getBuilding() {
     cadastral_number: '4040',
     cadastral_numberigs: '4041',
     address: getAddress(),
-    connection_points: [{ point: '1', value: 'тест' }]
+    mchrg_stages: [{ point: '1', value: 'тест' }]
   };
 }
 
