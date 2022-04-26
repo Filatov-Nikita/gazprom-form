@@ -14,7 +14,7 @@
     <AppModal v-model="submitModal">
       <ComplexFormModal @submit="onSubmit" @hideModal="submitModal = false" />
     </AppModal>
-    <ComplexFormLetter />
+    <ComplexFormLetter social />
     <AppLoading :showing="loading" />
   </ComplexFormLayout>
 </template>
@@ -145,7 +145,7 @@ function getBuilding() {
     cadastral_number: '',
     cadastral_numberigs: '',
     address: getAddress(),
-    connection_points: [{ point: '1', value: '' }]
+    mchrg_stages: [{ point: '1', value: '' }]
   };
 }
 

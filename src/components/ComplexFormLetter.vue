@@ -13,14 +13,20 @@ import { ref } from '@vue/reactivity';
 import { useStore } from 'vuex'
 
 export default {
-  setup() {
+  props: {
+    social: {
+      default: false,
+      type: Boolean
+    }
+  },
+  setup(props) {
     const params = new URLSearchParams(window.location.search);
     const store = useStore();
     const show = ref(params.has('letter'));
 
     const getLetter = async () => {
       try {
-        const { request_file: { filename, href } } = await store.dispatch('complexForm/getLetter', { id: params.get('id') });
+        const { request_file: { filename, href } } = await store.dispatch('complexForm/getLetter', { id: params.get('id'), social: props.social });
         download(filename, href);
         show.value = false;
       } catch(e) {
