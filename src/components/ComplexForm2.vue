@@ -158,7 +158,7 @@ function getObtaining() {
 
 function getUpload() {
   return {
-    inn: null,
+    registration_inn_kpp_certificate: null,
     snils: null,
     identity_document_prav: null,
     identity_document_prav_igz: null,

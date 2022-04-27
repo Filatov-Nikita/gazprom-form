@@ -107,7 +107,7 @@ const blob = new File(['1'], 'test.png', {type: 'image/png'});
 
 function getUpload() {
   return {
-    inn: blob,
+    registration_inn_kpp_certificate: blob,
     snils: blob,
     identity_document_prav: blob,
     identity_document_prav_igz: blob,

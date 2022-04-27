@@ -4,7 +4,7 @@
     <AppFieldset>
       <AppFormCard>
         <AppFieldset>
-          <AppFile :accept="$accept" v-bind="fileAttrs('inn', 'ИНН')" />
+          <AppFile :accept="$accept" v-bind="fileAttrs('registration_inn_kpp_certificate', 'ИНН')" />
           <AppFile :accept="$accept" v-bind="fileAttrs('snils', 'СНИЛС')" />
           <AppFile :accept="$accept" v-bind="fileAttrs('identity_document_prav', pravLabel)" />
           <AppFile :accept="$accept" v-bind="fileAttrs('identity_document_prav_igz', pravIgzLabel)" />
