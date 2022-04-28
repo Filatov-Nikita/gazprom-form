@@ -67,8 +67,15 @@ export default function (setValues) {
     return new Date(timestamp * 1000);
   }
 
+  function isDateFormat(value) {
+    const pattern = /^\d{2}\.\d{2}\.\d{4}$/i;
+    return pattern.test(value);
+  }
+
   function displayDate(timestamp) {
     if(!timestamp) return '';
+    if(isDateFormat(timestamp)) return timestamp;
+
     timestamp = +timestamp;
     if(isNaN(timestamp) || timestamp === -1) return '';
     return getPrettyDate(converToDate(timestamp)).value
