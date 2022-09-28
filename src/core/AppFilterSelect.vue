@@ -1,5 +1,5 @@
 <template>
-  <div class="tw-relative" v-click-outside="onOutside">
+  <div class="tw-relative">
     <AppLabel v-bind="{ label, for: name }" />
     <input
       v-bind="$attrs"
@@ -8,6 +8,7 @@
       :id="name"
       type="text"
       @focus="showing = true"
+      @blur="showing = false"
       :value="value"
       @input="onInput"
     />
@@ -118,9 +119,6 @@ export default {
         handleChange(opt.value);
         selectChange(opt.meta);
         showing.value = false;
-      },
-      onOutside() {
-        if (showing.value) showing.value = false;
       },
       onInput(e) {
         loading.value = true;

@@ -143,7 +143,6 @@ function getUpload() {
     signatures_sample: blob,
     contract_signing_person: blob,
     sign_documents_right: blob,
-    capital_construction_object_ownership: blob,
     proxy: blob,
     general_meeting_resolution: blob,
     main_subscriber_consent: blob,

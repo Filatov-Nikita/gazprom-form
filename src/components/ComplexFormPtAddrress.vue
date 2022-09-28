@@ -16,7 +16,7 @@
         ref="streetRef"
         :disabled="!city"
         :name="`${path}.street`"
-        rules="required"
+        :rules="!optionalStreet ? 'required' : ''"
         label="Улица"
         :fetcher="fetchStreets"
         :option="optionStreet"
@@ -47,6 +47,14 @@ import { watch, ref } from 'vue';
 
 export default {
   props: {
+    allRegions: {
+      default: false,
+      type: Boolean
+    },
+    optionalStreet: {
+      default: false,
+      type: Boolean
+    },
     path: {
       required: true,
       type: String,
@@ -89,7 +97,7 @@ export default {
       streetRef,
       buildingRef,
       flatRef,
-      fetchCities: async (query) => store.dispatch('getCity', { query }),
+      fetchCities: async (query) => store.dispatch('getCity', { query, allRegions: props.allRegions }),
       fetchStreets: async (query) =>
         store.dispatch('getStreet', {
           query,

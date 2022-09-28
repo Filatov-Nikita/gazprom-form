@@ -17,6 +17,7 @@
       <ComplexFormPtAddrress
         path="object_data.address"
         title="Адрес объекта газификации"
+        optionalStreet
       />
       <AppSelect
         cantEmpty

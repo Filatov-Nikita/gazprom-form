@@ -8,7 +8,7 @@ function getLocations(params = {}) {
   const meta = params.meta;
   let location = {};
 
-  if (!meta) location.region = 'Башкортостан';
+  if (!meta) location.region = params.allRegions === true ? '' : 'Башкортостан';
   else {
     const filtered = Object.entries(meta).filter((entry) => entry[1] !== null)
     location = Object.fromEntries(filtered);
@@ -19,12 +19,12 @@ function getLocations(params = {}) {
 
 export default createStore({
   actions: {
-    async getCity({ dispatch }, { query }) {
+    async getCity({ dispatch }, { query, allRegions = false }) {
       return dispatch('getAddress', {
         query,
         from: 'city',
         to: 'settlement',
-        locations: getLocations(),
+        locations: getLocations({ allRegions }),
       });
     },
     async getStreet({ dispatch }, { query, meta }) {

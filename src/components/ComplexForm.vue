@@ -196,7 +196,6 @@ function getUpload() {
     signatures_sample: null,
     contract_signing_person: null,
     sign_documents_right: null,
-    capital_construction_object_ownership: null,
     proxy: null,
     general_meeting_resolution: null,
     main_subscriber_consent: null,

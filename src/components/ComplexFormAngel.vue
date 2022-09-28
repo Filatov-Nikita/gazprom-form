@@ -14,7 +14,7 @@
         <AppInput name="proxy_data.proxy_number" rules="required" label="Номер доверенности" />
         <AppDatePicker name="proxy_data.proxy_date" rules="required" label="Дата доверенности" />
         <AppDatePicker name="proxy_data.proxy_end" rules="required" label="Действительна до" />
-        <ComplexFormPtAddrress path="proxy_data.mailing_address" title="Почтовый адрес" />
+        <ComplexFormPtAddrress allRegions path="proxy_data.mailing_address" title="Почтовый адрес" />
         <ComplexFormPtContacts path="proxy_data" />
       </template>
 

@@ -15,7 +15,7 @@
         <AppInput name="personal_data.ogrn" label="ОГРН" v-maska="'#############'" />
         <AppInput name="personal_data.organization_brief_name" rules="required" label="Краткое наименование организации" />
         <AppInput name="personal_data.organization_full_name" rules="required" label="Полное наименование организации" />
-        <ComplexFormPtAddrress path="personal_data.mailing_address" title="Почтовый адрес"/>
+        <ComplexFormPtAddrress allRegions path="personal_data.mailing_address" title="Почтовый адрес"/>
         <ComplexFormPtContacts path="personal_data"/>
         <AppSelect
           cantEmpty
@@ -29,7 +29,7 @@
         <ComplexFormPtFio path="personal_data"/>
         <ComplexFormPtPassport path="personal_data"/>
         <AppInput name="personal_data.inn" rules="required|numeric|length:12" label="ИНН" v-maska="'############'"/>
-        <ComplexFormPtAddrress path="personal_data.mailing_address" title="Почтовый адрес"/>
+        <ComplexFormPtAddrress allRegions path="personal_data.mailing_address" title="Почтовый адрес"/>
         <ComplexFormPtContacts path="personal_data"/>
         <template v-if="type === '3'">
           <AppSelect

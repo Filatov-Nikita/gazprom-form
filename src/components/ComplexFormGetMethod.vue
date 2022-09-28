@@ -17,6 +17,7 @@
       <AppButton v-if="showBtn" @click="pasteAdreess">Скопировать адрес из блока "Данные заявителя"</AppButton>
       <ComplexFormPtAddrress
         v-if="type === '1'"
+        allRegions
         path="documents_obtaining.mailing_address"
         title="Почтовый адрес"
       />
